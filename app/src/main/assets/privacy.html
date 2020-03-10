@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
+    <meta charset="UTF-8">
+    <title>html1</title>
+
+</head>
+<body>
+
+<a href="html2.html">html2.html</a>
+<a onClick="window.JSCallJava.callJava('hello a click')"><p>a标签调用本地java1</p></a>
+
+<a onClick="window.JSCallJava1.callJava1('hello a click')"><p>a标签调用本地java2</p></a>
+
+</br>
+<input type="button" id="call_java" value="调用本地java1"></input>
+
+<input type="button" id="call_java1" value="调用本地java2"></input>
+
+</br>
+jsCallJavaResult:<span id="span_result"></span>
+</br>
+javaCallJS:<span id="span_javamsg"></span>
+</br>
+<script type="text/javascript">
+
+        var call_java = document.getElementById("call_java");
+
+        var call_java1 = document.getElementById("call_java1");
+
+        var span_result = document.getElementById("span_result");
+
+        var span_javamsg = document.getElementById("span_javamsg");
+
+        call_java.onclick = function(){
+            var result = window.JSCallJava.callJava('hello input click');
+            span_result.innerHTML = result;
+        };
+
+        call_java1.onclick = function(){
+            var result = window.JSCallJava1.callJava1('hello input click11');
+            span_result.innerHTML = result;
+        };
+
+
+        window.javaCallJS = function(msg){
+            span_javamsg.innerHTML = msg;
+            window.JSCallJava.onJavaCallJSResult('true');
+            return true;
+        };
+
+    </script>
+
+</body>
+</html>

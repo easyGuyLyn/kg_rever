@@ -1,0 +1,155 @@
+<html>
+
+<head>
+    <meta charset="UTF-8"/>
+</head>
+
+<body style="word-break:break-all;">
+    <div id="content">
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+    </div>
+    <p>
+        <span>
+            <font id="text_issues"></font>
+            <font id="text_bet"></font>
+            <nobr><font id="text_time" color="#de443c"></font></nobr>
+            <font id="text_login" class="underline" color="#de443c" onclick="loginClick()" style="display:none">点击登录查看</font>
+        </span>
+        <img id="img_loading" style="display:none" src="file:////android_asset/open.gif">
+        <img id="img_advert" class="advert" style="display:none;" onclick="advertClick()" src="file:////android_asset/advert_qq.png">
+    </p>
+</body>
+
+<script type="text/javascript">
+    function refreshContent(contents){
+        var obj = document.getElementById('content');
+        var ps = obj.getElementsByTagName('p');
+        if(ps.length>=contents.length){
+            for(var i=ps.length -1;i>=0;i--){
+                var p = ps[i];
+                if(i<contents.length){
+                    p.innerHTML = contents[i];
+                }else{
+                    p.remove();
+                }
+            }
+        }else {
+            for(var i=0;i<contents.length;i++){
+                var content = contents[i];
+                if(i<ps.length){
+                    ps[i].innerHTML = content;
+                }else{
+                    addContent2Div(contents[i],'content');
+                }
+            }
+        }
+    }
+
+    <!--function refreshContent(contents){-->
+        <!--var obj = document.getElementById('content');-->
+        <!--obj.innerHTML = "";-->
+
+        <!--for(var i=0;i<contents.length;i++){-->
+           <!--addContent2Div(contents[i],'content')-->
+        <!--}-->
+    <!--}-->
+
+    function clearDiv(id){
+        var obj = document.getElementById(id);
+        obj.innerHTML = "";
+    }
+
+    function addContent2Div(content,div_id){
+        //创建一个p
+		var p = document.createElement('p');
+		p.innerHTML = '<span>'+content+'</span>'; //设置显示的数据，可以是标签．
+		p.width = '100%';
+
+		var div = document.getElementById(div_id); //获取div对象.
+		//动态插入到div中
+		div.appendChild(p);
+    }
+
+    function refreshLastPlayWithLogin(issues){
+        textModify(issues,'text_issues');
+        hideOrShowElement(true,'text_bet');
+        hideOrShowElement(true,'text_time');
+        hideOrShowElement(false,'text_login');
+        hideOrShowElement(true,'img_loading');
+        hideOrShowElement(true,'img_advert');
+    }
+
+    function refreshLastPlayWithTime(issues, bet, time, advertType){
+        textModify(issues,'text_issues');
+        textModify(bet,'text_bet');
+        textModify(time,'text_time');
+        hideOrShowElement(false,'text_bet');
+        hideOrShowElement(false,'text_time');
+        hideOrShowElement(true,'text_login');
+        hideOrShowElement(true,'img_loading');
+        qqOrWXAdvert(advertType);
+    }
+    
+    function refreshLastPlayWithLoading(issues, bet, advertType){
+        textModify(issues,'text_issues');
+        textModify(bet,'text_bet');
+        hideOrShowElement(false,'text_bet');
+        hideOrShowElement(true,'text_time');
+        hideOrShowElement(true,'text_login');
+        hideOrShowElement(false,'img_loading');
+        qqOrWXAdvert(advertType);
+    }
+
+    function textModify(text,id)
+    {
+        var obj = document.getElementById(id);
+        obj.innerHTML= text;
+    }
+
+    //isHide true 隐藏 false 显示
+    function hideOrShowElement(isHide,id){
+        var obj = document.getElementById(id);
+        if(isHide){
+            obj.style.display ="none";
+        }else{
+            obj.style.display="";
+        }
+    }
+    //1-qq,2-wx
+    function qqOrWXAdvert(type){
+        var obj = document.getElementById('img_advert');
+        if(type == 1){
+            obj.src="file:////android_asset/advert_qq.png";
+            obj.style.display ="";
+        }else if(type == 2){
+            obj.src="file:////android_asset/advert_wx.png";
+            obj.style.display ="";
+        }else{
+            obj.style.display ="none";
+        }
+    }
+    function advertClick(){
+        android.advertClick();
+    }
+    function loginClick(){
+        android.loginClick();
+    }
+</script>
+<style type="text/css">
+    *{margin:0;padding:0;}  /*不加的话会被p或其他标签默认样式影响*/
+    p{line-height:25px;}
+    span{vertical-align: middle;}
+    img{vertical-align: middle;height:10px;}
+    .underline{text-decoration:underline;}
+    .advert{vertical-align: middle;height:25px;}
+</style>
+</html>
