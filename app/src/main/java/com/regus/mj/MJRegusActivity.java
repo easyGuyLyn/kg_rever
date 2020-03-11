@@ -646,9 +646,10 @@ public class MJRegusActivity extends Activity {
 
             String rootUrl = url + "?aid=";
 
-            Log.e("regus_", "请求的接口 " + rootUrl);
 
             String allUrl = rootUrl + aid + "&sid=" + sid;
+
+            Log.e("regus_", "请求的接口 " + allUrl);
 
             try {
                 URL urll = new URL(allUrl);
