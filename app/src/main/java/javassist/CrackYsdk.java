@@ -6,7 +6,7 @@ import java.io.FileOutputStream;
 
 public class CrackYsdk {
 
-    static final String Jar_dir = "Users/archar/cocosCreator/sports/kg_rever/app/src/main/assets/";
+    static final String Jar_dir = "/Users/ushee/AndroidStudioProjects/sports/kg_rever/app/src/main/assets/";
 
     static final String Jar_name = "ysdk.jar";
 
