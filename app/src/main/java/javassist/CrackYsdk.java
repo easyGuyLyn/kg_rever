@@ -4,16 +4,15 @@ package javassist;
 import java.io.File;
 import java.io.FileOutputStream;
 
-public class CrackCharles {
-
+public class CrackYsdk {
 
     static final String Jar_dir = "Users/archar/cocosCreator/sports/kg_rever/app/src/main/assets/";
 
-    static final String Jar_name = "charles.jar";
+    static final String Jar_name = "ysdk.jar";
 
-    static final String Package_name = "com.xk72.charles";
+    static final String Package_name = "com.tencent.ysdk.module.hades";
 
-    static final String Class_name = "GPSz";
+    static final String Class_name = "c";
 
 
     public static void main(String args[]) {
@@ -23,16 +22,11 @@ public class CrackCharles {
             //1 修改
 
             ClassPool classPool = ClassPool.getDefault();
-            classPool.insertClassPath(Jar_dir + Jar_name);
+            classPool.appendClassPath(Jar_dir + Jar_name);
 
             CtClass ctClass = classPool.get(Package_name + "." + Class_name);
-            CtMethod ctMethod = ctClass.getDeclaredMethod("Dgmx", null);
-            ctMethod.setBody("{ return true; }");
-
-            CtMethod ctMethod1 = ctClass.getDeclaredMethod("Wmmw", null);
-            ctMethod1.setBody("{ return \"破解者: Ushee\"; }");
-
-
+            CtMethod ctMethod = ctClass.getDeclaredMethod("run", null);
+            ctMethod.setBody("{ }");
 
 
 
