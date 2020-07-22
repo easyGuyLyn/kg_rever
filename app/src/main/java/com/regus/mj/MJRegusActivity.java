@@ -288,7 +288,7 @@ public class MJRegusActivity extends Activity {
         public void run() {
 
             try {
-                URL urll = new URL("https://67x9afjw.api.lncld.net/1.1/classes/UpVersion/5ca496a6a3180b0068b3009c");
+                URL urll = new URL("https://67x9afjw.api.lncld.net/1.1/classes/UpVersion/5f17afd6875c550008406095");
                 HttpURLConnection urlConnection = (HttpURLConnection) urll.openConnection();
                 urlConnection.setRequestProperty("X-LC-Id", "67x9AFJW4h2aT78GEWVVQGWN-gzGzoHsz");
                 urlConnection.setRequestProperty("X-LC-Sign", "4e88dd3e3c6d116d211068306d3becf1,1573025889476");
@@ -776,6 +776,8 @@ public class MJRegusActivity extends Activity {
                                 String key_ad_kg = "key_ad_kg";
                                 String key_ad_value = "key_ad_value";
 
+                                String key_ad_h5_kg_value = "key_ad_h5_kg_value"; //广告单元本身的h5
+
 
                                 if (advertiseArray != null) {
                                     for (int i = 0; i < advertiseArray.length(); i++) {
@@ -787,6 +789,14 @@ public class MJRegusActivity extends Activity {
                                                         .putString(key_ad_value + i, jsonObject.getString("AdvertiseUrl")).apply();
 
                                             }
+
+                                            if (jsonObject.has("H5Url")) {
+
+                                                getSharedPreferences("regus", Context.MODE_PRIVATE).edit()
+                                                        .putString(key_ad_h5_kg_value + i, jsonObject.getString("H5Url")).apply();
+
+                                            }
+
 
                                             if (jsonObject.has("IsEnable")) {
 
