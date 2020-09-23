@@ -58,8 +58,8 @@ dependencies {
 
     //javassist
     implementation 'org.javassist:javassist:3.20.0-GA'
-
-
-
+//
+//    implementation 'cn.leancloud:storage-android:6.5.11'
+//    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 
 }

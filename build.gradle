@@ -10,6 +10,10 @@ buildscript {
         maven {
             url 'https://dl.bintray.com/umsdk/release'
         }
+
+        maven {
+            url "https://oss.sonatype.org/content/groups/public/"
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.1'
@@ -30,7 +34,9 @@ allprojects {
         maven {
             url 'https://dl.bintray.com/umsdk/release'
         }
-
+        maven {
+            url "https://oss.sonatype.org/content/groups/public/"
+        }
     }
 }
 

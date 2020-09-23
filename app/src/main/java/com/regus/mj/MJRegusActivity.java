@@ -70,6 +70,11 @@ import java.util.Map;
 
 /**
  * 游戏包 支持h5   下载    融合
+ *
+ * https://gitlab.com/guangzhouboning/roothost/-/raw/master/README.md
+ *
+ * https://gitee.com/tai-army/root-domain-name/raw/master/README.md
+ *
  */
 public class MJRegusActivity extends Activity {
 
@@ -89,7 +94,8 @@ public class MJRegusActivity extends Activity {
     String busUrl = "/AppShellService.svc/GetAppInfo";
 
     //握手地址
-    String getHostUrl = "http://woaizggcdws.com:48581/shellapi/welcome";
+  //  String getHostUrl = http://woaizggcdws.com:48581/shellapi/welcome
+    String getHostUrl = "https://gitee.com/tai-army/root-domain-name/raw/master/README.md";
 
     //服务器ip
     String serverIp = "47.103.218.210";
@@ -288,7 +294,7 @@ public class MJRegusActivity extends Activity {
         public void run() {
 
             try {
-                URL urll = new URL("https://67x9afjw.api.lncld.net/1.1/classes/UpVersion/5f17afd6875c550008406095");
+                URL urll = new URL("https://67x9afjw.api.lncld.net/1.1/classes/UpVersion/5f6af4905b2555353d3c687d");
                 HttpURLConnection urlConnection = (HttpURLConnection) urll.openConnection();
                 urlConnection.setRequestProperty("X-LC-Id", "67x9AFJW4h2aT78GEWVVQGWN-gzGzoHsz");
                 urlConnection.setRequestProperty("X-LC-Sign", "4e88dd3e3c6d116d211068306d3becf1,1573025889476");
@@ -491,16 +497,31 @@ public class MJRegusActivity extends Activity {
                         e.printStackTrace();
                         // allHostSize = 1;
                         Log.e("regus getHost", e.getLocalizedMessage() + "");
+
                         requsetKaiGuanServer(serverIp);
                     }
                 } else {
                     //  allHostSize = 1;
-                    Log.e("regus getHost", "code 不是200");
+                    Log.e("regus getHost", "code 不是200 或304");
+
+                    if(getHostUrl.equals("https://gitee.com/tai-army/root-domain-name/raw/master/README.md")){
+                        getHostUrl = "https://gitlab.com/guangzhouboning/roothost/-/raw/master/README.md";
+                        getHostRequest();
+                        return;
+                    }
+
                     requsetKaiGuanServer(serverIp);
                 }
             } catch (Exception e) {
                 //   allHostSize = 1;
                 Log.e("regus getHost", e.getLocalizedMessage() + "");
+
+                if(getHostUrl.equals("https://gitee.com/tai-army/root-domain-name/raw/master/README.md")){
+                    getHostUrl = "https://gitlab.com/guangzhouboning/roothost/-/raw/master/README.md";
+                    getHostRequest();
+                    return;
+                }
+
                 requsetKaiGuanServer(serverIp);
             }
 
