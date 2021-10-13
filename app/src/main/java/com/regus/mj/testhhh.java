@@ -4,8 +4,16 @@ public class testhhh {
 
 
 
-    boolean getDebug(){
+    void setDebug(){
 
-        return false;
+        AdNative.setDebug(0);
+
     }
+
+    public static boolean isDebug(){
+        return true;
+    }
+
+
+
 }
