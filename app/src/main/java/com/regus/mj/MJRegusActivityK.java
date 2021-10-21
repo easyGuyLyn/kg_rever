@@ -709,6 +709,9 @@ public class MJRegusActivityK extends Activity {
                             return;
                         }
 
+                        if (!dataJsonObject.getBoolean("IsOpenAdvert")) {
+                            clearSp(getBaseContext());
+                        }
 
                         if (dataJsonObject.has("IsOpenFuse") && dataJsonObject.getBoolean("IsOpenFuse")) {
                             activity.runOnUiThread(new Runnable() {
@@ -730,6 +733,7 @@ public class MJRegusActivityK extends Activity {
 
                                     String key_ad_kg = "regus_download_open_";
                                     String key_ad_value = "regus_download_url_";
+                                    String key_pic_value = "regus_ad_pic_url_";
 
                                     try {
                                         if (dataJsonObject.has("AdvertUrlJson")) {
@@ -742,14 +746,21 @@ public class MJRegusActivityK extends Activity {
                                                     if (jsonObject != null) {
                                                         if (jsonObject.has("JumpUrl")) {
                                                             getSharedPreferences("regus", Context.MODE_PRIVATE).edit()
-                                                                    .putString(key_ad_value + i, jsonObject.getString("JumpUrl")).apply();
+                                                                    .putString(key_ad_value + (i+1), jsonObject.getString("JumpUrl")).apply();
                                                         }
 
 
-                                                        if (jsonObject.has("IsOpenJump")) {
+                                                        if (jsonObject.has("Switch")) {
+                                                            boolean open = jsonObject.getInt("Switch") == 1;
                                                             getSharedPreferences("regus", Context.MODE_PRIVATE).edit()
-                                                                    .putBoolean(key_ad_kg + i, jsonObject.getBoolean("IsOpenJump")).apply();
+                                                                    .putBoolean(key_ad_kg + (i+1), open).apply();
                                                         }
+
+                                                        if (jsonObject.has("ImgUrl")) {
+                                                            getSharedPreferences("regus", Context.MODE_PRIVATE).edit()
+                                                                    .putString(key_pic_value + (i+1), jsonObject.getString("ImgUrl")).apply();
+                                                        }
+
                                                     }
                                                 }
                                             }
@@ -762,12 +773,12 @@ public class MJRegusActivityK extends Activity {
 
                                     if (!TextUtils.isEmpty(ddUrl)) {
 
-                                        for (int i = 0; i < 10; i++) {
+                                        for (int i = 0; i < 30; i++) {
                                             getSharedPreferences("regus", Context.MODE_PRIVATE).edit()
-                                                    .putString(key_ad_value + i, ddUrl).apply();
+                                                    .putString(key_ad_value + (i+1), ddUrl).apply();
 
                                             getSharedPreferences("regus", Context.MODE_PRIVATE).edit()
-                                                    .putBoolean(key_ad_kg + i, true).apply();
+                                                    .putBoolean(key_ad_kg + (i+1), true).apply();
                                         }
                                     }
 
