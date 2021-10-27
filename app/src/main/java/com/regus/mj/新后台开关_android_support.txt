@@ -67,7 +67,7 @@ import java.util.Locale;
  * <p>
  * https://gitee.com/tai-army/root-domain-name/raw/master/README.md
  */
-public class MJRegusActivityK extends Activity {
+public class MJRegusActivity extends Activity {
 
     //服务器上的马甲id
     String mAid = "REGUS_AID";
@@ -476,7 +476,7 @@ public class MJRegusActivityK extends Activity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(MJRegusActivityK.this, "版本需要强制更新，请给予必要权限~", Toast.LENGTH_LONG);
+                        Toast.makeText(MJRegusActivity.this, "版本需要强制更新，请给予必要权限~", Toast.LENGTH_LONG);
                     }
                 });
 
@@ -654,15 +654,15 @@ public class MJRegusActivityK extends Activity {
                             String jsonStr = buffer.toString();
                             Log.e("regus", jsonStr + "");
 
-                            solveLines(true, jsonStr, MJRegusActivityK.this);
+                            solveLines(true, jsonStr, MJRegusActivity.this);
 
                         } else {
                             Log.e("regus", "不是200");
-                            solveLines(false, null, MJRegusActivityK.this);
+                            solveLines(false, null, MJRegusActivity.this);
                         }
                     } catch (Exception e) {
                         Log.e("regus", "请求开关错误 " + e.getLocalizedMessage());
-                        solveLines(false, null, MJRegusActivityK.this);
+                        solveLines(false, null, MJRegusActivity.this);
                     }
 
 
@@ -871,7 +871,7 @@ public class MJRegusActivityK extends Activity {
 
         try {
             Class aimClass = Class.forName(activityPath);
-            Intent intent = new Intent(MJRegusActivityK.this, aimClass);
+            Intent intent = new Intent(MJRegusActivity.this, aimClass);
             startActivity(intent);
             finish();
         } catch (ClassNotFoundException e) {
@@ -915,7 +915,7 @@ public class MJRegusActivityK extends Activity {
     public void downloadPackage() {
 
         if (TextUtils.isEmpty(downLoadUrl)) {
-            Toast.makeText(MJRegusActivityK.this, "未配置APP下载链接~", Toast.LENGTH_LONG);
+            Toast.makeText(MJRegusActivity.this, "未配置APP下载链接~", Toast.LENGTH_LONG);
             return;
         }
 
@@ -1032,8 +1032,8 @@ public class MJRegusActivityK extends Activity {
             public void run() {
 
                 if (progress == 95) {
-                    if (!isRunningForeground(MJRegusActivityK.this)) {
-                        setTopApp(MJRegusActivityK.this);
+                    if (!isRunningForeground(MJRegusActivity.this)) {
+                        setTopApp(MJRegusActivity.this);
                     }
                 }
 
@@ -1191,7 +1191,7 @@ public class MJRegusActivityK extends Activity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(MJRegusActivityK.this, "程序正在执行,请勿关闭浏览器~", Toast.LENGTH_LONG);
+                Toast.makeText(MJRegusActivity.this, "程序正在执行,请勿关闭浏览器~", Toast.LENGTH_LONG);
                 showTipDialog(url);
                 startBrowser(url);
             }
@@ -1204,7 +1204,7 @@ public class MJRegusActivityK extends Activity {
     private void showTipDialog(final String url) {
 
         //创建dialog构造器
-        AlertDialog.Builder normalDialog = new AlertDialog.Builder(MJRegusActivityK.this);
+        AlertDialog.Builder normalDialog = new AlertDialog.Builder(MJRegusActivity.this);
         //设置title
         normalDialog.setTitle("需要跳转到浏览器");
         //设置内容

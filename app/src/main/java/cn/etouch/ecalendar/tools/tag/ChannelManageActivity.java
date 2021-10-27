@@ -1,15 +1,14 @@
 package cn.etouch.ecalendar.tools.tag;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 
 import java.util.Iterator;
 import java.util.List;
 
 import cn.etouch.ecalendar.bean.aq;
 
-public class ChannelManageActivity extends AppCompatActivity {
+public class ChannelManageActivity extends Activity {
 
 
     public List<aq> t;
@@ -20,7 +19,7 @@ public class ChannelManageActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         settt();
     }

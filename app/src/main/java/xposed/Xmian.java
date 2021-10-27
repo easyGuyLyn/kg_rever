@@ -13,7 +13,6 @@ import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
-import okhttp3.logging.HttpLoggingInterceptor;
 
 public class Xmian implements IXposedHookLoadPackage {
 

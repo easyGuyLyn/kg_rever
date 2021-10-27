@@ -1,12 +1,12 @@
 package cn.etouch.ecalendar.tools.life;
 
-import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import androidx.fragment.app.Fragment;
 import cn.etouch.ecalendar.tools.life.bean.g;
 
 public class o extends Fragment {
