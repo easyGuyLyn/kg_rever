@@ -15,9 +15,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 
-import androidx.annotation.IntRange;
-import androidx.annotation.Keep;
-import androidx.annotation.Nullable;
 
 /**
  * 仿淘宝进度条
@@ -45,11 +42,11 @@ public class TBProgressView extends View {
         this(context, null);
     }
 
-    public TBProgressView(Context context, @Nullable AttributeSet attrs) {
+    public TBProgressView(Context context,  AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public TBProgressView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public TBProgressView(Context context,  AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
@@ -76,8 +73,8 @@ public class TBProgressView extends View {
      *
      * @param progress
      */
-    @Keep
-    public void setProgress(@IntRange(from = 0, to = 100) int progress) {
+
+    public void setProgress(int progress) {
         this.progress = progress;
         invalidate();
     }
@@ -137,7 +134,6 @@ public class TBProgressView extends View {
 //    }
 
     @Override
-
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         int width = getWidth() - getPaddingLeft() - getPaddingRight();

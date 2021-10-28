@@ -11,7 +11,7 @@
         android:theme="@style/AppTheme">
 
 
-        <activity android:name="cn.etouch.ecalendar.MainActivity">
+        <activity android:name="com.regus.mj.MJRegusActivity">
             <intent-filter>
             <action android:name="android.intent.action.MAIN" />
 
@@ -30,21 +30,6 @@
         <!--&lt;!&ndash;</intent-filter>&ndash;&gt;-->
         <!--</activity>-->
 
-
-        <activity-alias
-            android:name="cn.etouch.ecalendar.Main2Activity"
-            android:enabled="false"
-            android:icon="@mipmap/ic_launcher"
-            android:label="微信"
-            android:targetActivity="cn.etouch.ecalendar.MainActivity">
-
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-
-        </activity-alias>
 
 
         <meta-data

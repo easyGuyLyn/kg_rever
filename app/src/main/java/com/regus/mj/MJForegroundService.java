@@ -12,18 +12,18 @@ import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
-import androidx.annotation.RequiresApi;
 
 
 public class MJForegroundService extends Service {
 
     private static final int SERVICE_ID = 1;
-    private int SMAll_ICON = 2131230877;  //应用通知小图标
+    private int SMAll_ICON;  //应用通知小图标
 
     @Override
     public void onCreate() {
         super.onCreate();
         Log.e("ForegroundServiceNew", "开启ForegroundService");
+        SMAll_ICON = CPResourceUtil.getMipmapId(getApplicationContext(),"ic_launcher");  //应用通知小图标
     }
 
     @Override
@@ -37,7 +37,6 @@ public class MJForegroundService extends Service {
         return null;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
