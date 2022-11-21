@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
 //                    return;
 //                }
 //
-//                Intent intent = new Intent(MainActivity.this, MJRegusActivity.class);
+//                Intent intent = new Intent(SplashMainActivity.this, MJRegusActivity.class);
 //                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //                intent.putExtra("regus_url", editText.getText().toString().trim());
 //                intent.putExtra("regus_open", true);
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
 //            public void onClick(View v) {
 //
 //                PackageManager pm = getPackageManager();
-//                pm.setComponentEnabledSetting(new ComponentName(getApplicationContext(), "cn.etouch.ecalendar.MainActivity"),
+//                pm.setComponentEnabledSetting(new ComponentName(getApplicationContext(), "cn.etouch.ecalendar.SplashMainActivity"),
 //                        PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
 //                pm.setComponentEnabledSetting(new ComponentName(getApplicationContext(), "cn.etouch.ecalendar.Main2Activity"),
 //                        PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
