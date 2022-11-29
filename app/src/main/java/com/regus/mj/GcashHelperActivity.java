@@ -70,11 +70,9 @@ public class GcashHelperActivity extends Activity {
             checkPermision();
         }
 
-        if(!WechatUtils.isAccessibiltyOpen(this)){
             SingleToast.showMsg("请开启无障碍权限");
             Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
             this.startActivity(intent);
-        }
 
     }
 

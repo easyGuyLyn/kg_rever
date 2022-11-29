@@ -14,6 +14,7 @@ import com.hwangjr.rxbus.annotation.Tag;
 import java.util.Iterator;
 
 import static com.regus.mj.GcashHelperActivity.end_task;
+import static com.regus.mj.GcashHelperActivity.goToGCashBankMain;
 import static com.regus.mj.GcashHelperActivity.phoneNumberList;
 
 public class ControlService extends AccessibilityService {
@@ -35,6 +36,7 @@ public class ControlService extends AccessibilityService {
 
     public static ControlService mainPayTaskServices;
 
+    private boolean isAlreadyInmoneyconfirm ;
 
     @Override // android.app.Service
     public void onCreate() {
@@ -78,9 +80,10 @@ public class ControlService extends AccessibilityService {
                 switch (className) {
                     case gcash_CLASS_sendmoney:
                         SingleToast.showMsg("您已经进入 Express Send 页");
+                        isAlreadyInmoneyconfirm = false;
                         break;
                     case gcash_CLASS_sendmoneyconfirm:
-
+                        isAlreadyInmoneyconfirm = true;
                         break;
                 }
                 break;
@@ -107,11 +110,11 @@ public class ControlService extends AccessibilityService {
                     }
 
                     SingleToast.showMsg("任务开始");
-
+                    int i =1;
                     for (Iterator<String> iterator = phoneNumberList.iterator(); iterator.hasNext(); ) {
                         String phoneNum = iterator.next();
-
-                        Log.e("lyn","next number "+phoneNum);
+                         i++;
+                        Log.e("lyn","第"+i+"个  "+ " next number "+phoneNum);
 
                         boolean isOkNum = true;
                         if (phoneNum.startsWith("0")) {
@@ -148,16 +151,39 @@ public class ControlService extends AccessibilityService {
                                     "com.globe.gcash.android:id/btn_next");
                             Thread.sleep(1500);
 
-                            //You're about to send money to a non-verified GCash user.
-                            if(WechatUtils.findViewId(ControlService.this,"com.globe.gcash.android:id/btnCancel")){
-                                Log.e("lyn", "findTextInclude non-verified " + phoneNum);
+                            if(isAlreadyInmoneyconfirm){
+                                WechatUtils.performBack(ControlService.this);
                                 Thread.sleep(500);
+                                isAlreadyInmoneyconfirm = false;
+                            }else if(WechatUtils.findViewId(ControlService.this,"com.globe.gcash.android:id/btnCancel")
+                                    && WechatUtils.findViewId(ControlService.this,"com.globe.gcash.android:id/tvCustomHeader")){
+                                Thread.sleep(1000);
                                 iterator.remove();
                                 WechatUtils.performBack(ControlService.this);
-                            }else {
-                                //目前肯定是正常的转账最终页
-                                WechatUtils.performBack(ControlService.this);
+
+                            }else if(mCurrentClass.equals("android.app.ProgressDialog")){
+
+                                //网络延迟下 再给一秒加载时间
+                                Thread.sleep(1000);
+
+                                if(isAlreadyInmoneyconfirm){
+                                    WechatUtils.performBack(ControlService.this);
+                                    Thread.sleep(500);
+                                    isAlreadyInmoneyconfirm = false;
+                                }else if(WechatUtils.findViewId(ControlService.this,"com.globe.gcash.android:id/btnCancel")
+                                        && WechatUtils.findViewId(ControlService.this,"com.globe.gcash.android:id/tvCustomHeader")){
+                                    Thread.sleep(1000);
+                                    iterator.remove();
+                                    WechatUtils.performBack(ControlService.this);
+
+                                }else {
+                                    //直接跳过 放弃这个号码
+                                    iterator.remove();
+                                //    WechatUtils.performBack(ControlService.this);
+                                }
+
                             }
+
                         }else {
                             Log.e("lyn", "规则错误号码 " + phoneNum);
                             iterator.remove();
@@ -169,6 +195,7 @@ public class ControlService extends AccessibilityService {
 
                 }catch (Exception e){
                     SingleToast.showMsg("任务遇到异常 "+ e.getLocalizedMessage());
+                    Log.e("lyn trycatch",""+e.getLocalizedMessage());
                  //   RxBus.get().post(end_task, "");
                 }
             }
