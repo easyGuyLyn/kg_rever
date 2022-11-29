@@ -2,6 +2,7 @@ package com.regus;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Handler;
 import android.util.Log;
 
 import com.regus.mj.ServiceManagerWraper;
@@ -9,21 +10,27 @@ import com.regus.mj.ServiceManagerWraper;
 import swu.xl.linkgame.Util.EncryptionUtil;
 
 public class MyApplication extends Application {
-
+    public static Handler handler = new Handler();
     @Override
     protected void attachBaseContext(Context base) {
         //ServiceManagerWraper.hookPMS(base);
         super.attachBaseContext(base);
     }
 
+    private static MyApplication instance;
+
+
+    public static MyApplication getInstance() {
+        return instance;
+    }
+
+
+
     @Override
     public void onCreate() {
         super.onCreate();
-
-        String a =  EncryptionUtil.decrypt(EncryptionUtil.KEY, "NjmY2bKTvaJyXYaTkXek0sFESytcm/KeAccs9ei3ujk=");
-
-
-        Log.e("lyn", a + "");
+        instance = this;
+      //  Utils.init(this);
     }
 
 

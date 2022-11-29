@@ -5,7 +5,7 @@ android {
     defaultConfig {
         applicationId "com.dayday.poker"
         minSdkVersion 16
-        targetSdkVersion 30
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -53,6 +53,8 @@ dependencies {
     //如果需要引入文档，方便查看的话
     compileOnly 'de.robv.android.xposed:api:82:sources'
 
+//    implementation 'com.blankj:utilcode:1.22.0'
+    implementation 'com.hwangjr.rxbus:rxbus:1.0.6'
 
     //javassist
     implementation 'org.javassist:javassist:3.20.0-GA'
