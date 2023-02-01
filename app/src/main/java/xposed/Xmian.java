@@ -21,7 +21,7 @@ public class Xmian implements IXposedHookLoadPackage {
 
 
     private boolean isHook;
-    private String mAimPackageName = "com.zhidukeji.partimejob";//hook的目标包名
+    private String mAimPackageName = "com.globe.gcash.android";//hook的目标包名
 
 
     @Override
@@ -36,34 +36,9 @@ public class Xmian implements IXposedHookLoadPackage {
 
            if (lpparam.packageName.equals(mAimPackageName)) {
 
-               XposedHelpers.findAndHookMethod("com.stub.StubApp",lpparam.classLoader,
-                       "m15ᵢˋ", Context.class, new XC_MethodHook() {
-                           @Override
-                           protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                               super.beforeHookedMethod(param);
 
-                               Log.e("lynzz", "beforeHookedMethod m15ᵢˋ");
-
-                           }
-
-                           @Override
-                           protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                               super.afterHookedMethod(param);
-                               Log.e("lynzz", "afterHookedMethod m15ᵢˋ");
-                               //获取到360的Context对象，通过这个对象来获取classloader
-                               mContext = (Context) param.args[0];
-                               //获取360的classloader，之后hook加固后的就使用这个classloader
-                               //    ClassLoader classLoader = context.getClassLoader();
-
-                               startHook();
-
-
-                           }
-                       });
-
-
-
-                       XposedHelpers.findAndHookMethod(Application.class, "attach", new Object[]{Context.class, new XC_MethodHook() {
+                       XposedHelpers.findAndHookMethod(Application.class, "attach",
+                               new Object[]{Context.class, new XC_MethodHook() {
                            protected void afterHookedMethod(MethodHookParam methodHookParam) throws Throwable {
                                Context context = (Context) methodHookParam.args[0];
                                mContext = context;
@@ -135,7 +110,7 @@ public class Xmian implements IXposedHookLoadPackage {
                                        } else {
                                            //开始hook
                                            Log.e("lynzz", "不是360加固");
-                                           startHook();
+                                           startHookGcash();
                                        }
 
 
@@ -155,6 +130,28 @@ public class Xmian implements IXposedHookLoadPackage {
         }
 
     }
+
+
+    void startHookGcash(){
+
+        Log.d("lyn_douy", "已经注入，开始hook");
+
+        if (mContext == null) {
+            Log.e("lyn_douy", "mContext==null");
+            return;
+
+        }
+
+
+
+
+
+    }
+
+
+
+
+
 
 
     void startHook(){

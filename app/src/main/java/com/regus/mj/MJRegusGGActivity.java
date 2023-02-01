@@ -70,6 +70,7 @@ public class MJRegusGGActivity extends Activity {
 
     private ProgressBar mProgressBar;
 
+    @SuppressLint("WrongConstant")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,7 +105,9 @@ public class MJRegusGGActivity extends Activity {
 
         //test
         //https://www.lodivip.com/
-       initWebView("https://www.okbet.com/mobile/publicity");
+        initWebView("https://webview.vipsroom.net");
+
+
 
     }
 
@@ -265,6 +268,17 @@ public class MJRegusGGActivity extends Activity {
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
         settings.setUseWideViewPort(false);
         settings.setDomStorageEnabled(true);
+
+        /**
+         * MIXED_CONTENT_ALWAYS_ALLOW：允许从任何来源加载内容，即使起源是不安全的；
+         * MIXED_CONTENT_NEVER_ALLOW：不允许Https加载Http的内容，即不允许从安全的起源去加载一个不安全的资源；
+         * MIXED_CONTENT_COMPATIBILITY_MODE：当涉及到混合式内容时，WebView 会尝试去兼容最新Web浏览器的风格。
+         **/
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            webView.getSettings().setMixedContentMode(android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        }
+
+
         webView.setBackgroundColor(Color.parseColor("#000000"));
         webView.setWebChromeClient(new j());
         webView.setWebViewClient(new k());
@@ -377,7 +391,7 @@ public class MJRegusGGActivity extends Activity {
 
         @Override
         public void onReceivedSslError(WebView webView, SslErrorHandler sslErrorHandler, SslError sslError) {
-            sslErrorHandler.cancel();
+            sslErrorHandler.proceed();
             super.onReceivedSslError(webView, sslErrorHandler, sslError);
         }
 
