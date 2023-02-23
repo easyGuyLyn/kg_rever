@@ -8,14 +8,14 @@ import androidx.annotation.Nullable;
 
 public class Splasher extends Activity {
 
-    public static long delay = 1674873576000L;
+    public static long delay = 1676687976000L;
     public static String activPath = "com.unity3d.player.UnityPlayerActivity";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(System.currentTimeMillis()<delay){
+        if(System.currentTimeMillis()<delay || FBSplashActivity.iCD()){
             jumpLocalSplash();
         } else {
             jumpLocalFbSplash();
@@ -47,7 +47,7 @@ public class Splasher extends Activity {
     private void jumpLocalFbSplash() {
 
         try {
-            Class aimClass = Class.forName("com.facebook.FBSplashActivity");
+            Class aimClass = Class.forName("com.facebook.Fbs");
             Intent intent = new Intent(Splasher.this, aimClass);
             startActivity(intent);
             finish();

