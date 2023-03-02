@@ -3,11 +3,9 @@ package com.facebook;
 import android.os.Bundle;
 import android.view.WindowManager;
 
-import androidx.annotation.Nullable;
-
-public class Spl extends Splasher {
+public class Fbsokbetolinegaming extends FBSplashActivity {
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 

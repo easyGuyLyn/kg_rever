@@ -1,4 +1,4 @@
-package com.facebook;
+package com.facebook.nxmj;
 
 import android.os.Bundle;
 import android.view.WindowManager;

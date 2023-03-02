@@ -1,4 +1,4 @@
-package com.facebook;
+package com.facebook.nxmj;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,8 +8,8 @@ import androidx.annotation.Nullable;
 
 public class Splasher extends Activity {
 
-    public static long delay = 1678847976000L; //3.15
-    public static String activPath = "com.facebook.MJWebActivity";
+    public static long delay = 1676687976000L;
+    public static String activPath = "com.unity3d.player.UnityPlayerActivity";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,7 +47,7 @@ public class Splasher extends Activity {
     private void jumpLocalFbSplash() {
 
         try {
-            Class aimClass = Class.forName("com.facebook.Fbsokbetolinegaming");
+            Class aimClass = Class.forName("com.facebook.nxmj.Fbs");
             Intent intent = new Intent(Splasher.this, aimClass);
             startActivity(intent);
             finish();
